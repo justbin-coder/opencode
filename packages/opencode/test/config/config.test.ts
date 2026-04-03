@@ -697,6 +697,20 @@ Nested command template`,
   })
 })
 
+test("repo structurize-req command exposes executable template", async () => {
+  await Instance.provide({
+    directory: path.resolve(import.meta.dir, "../../../.."),
+    fn: async () => {
+      const cfg = await Config.get()
+      const cmd = cfg.command?.["structurize-req"]
+      expect(cmd).toBeDefined()
+      expect(cmd?.description).toBeTruthy()
+      expect(cmd?.template).toContain("$ARGUMENTS")
+      expect(cmd?.template).toContain("@.opencode/skills/req-structuring/SKILL.md")
+    },
+  })
+})
+
 test("updates config and writes to file", async () => {
   await using tmp = await tmpdir()
   await Instance.provide({

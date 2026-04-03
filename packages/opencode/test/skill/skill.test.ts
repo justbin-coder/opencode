@@ -159,6 +159,18 @@ Just some content without YAML frontmatter.
   })
 })
 
+test("discovers repo req-structuring skill", async () => {
+  await Instance.provide({
+    directory: path.resolve(import.meta.dir, "../../../.."),
+    fn: async () => {
+      const skill = await Skill.get("req-structuring")
+      expect(skill).toBeDefined()
+      expect(skill?.description).toBeTruthy()
+      expect(skill?.location).toContain(path.join(".opencode", "skills", "req-structuring", "SKILL.md"))
+    },
+  })
+})
+
 test("discovers skills from .claude/skills/ directory", async () => {
   await using tmp = await tmpdir({
     git: true,

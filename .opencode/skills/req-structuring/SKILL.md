@@ -1,3 +1,8 @@
+---
+name: req-structuring
+description: 将自然语言需求转换为结构化需求卡片，并在需要时写入 .opencode/requirements。
+---
+
 # 需求结构化 Skill
 
 > **场景：** 将自然语言需求转换为标准化的结构化需求卡片
@@ -978,4 +983,3 @@ int start_data_acquisition(
 | **验收标准** | BDD 格式（Given...When...Then），必须可测试 |
 | **批处理** | 一次返回 JSON 数组，单条失败不中断 |
 | **输出格式** | Markdown 表格 + Mermaid 图表，Git 友好 |
-
