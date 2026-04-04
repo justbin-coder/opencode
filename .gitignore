@@ -29,3 +29,5 @@ UPCOMING_CHANGELOG.md
 logs/
 *.bun-build
 tsconfig.tsbuildinfo
+# C++ 代码检索索引（离线构建产物，不提交）
+.opencode-index/
