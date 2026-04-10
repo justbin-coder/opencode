@@ -80,6 +80,8 @@ import { DialogExportOptions } from "../../ui/dialog-export-options"
 import { formatTranscript } from "../../util/transcript"
 import { UI } from "@/cli/ui.ts"
 import { useTuiConfig } from "../../context/tui-config"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 addDefaultParsers(parsers.parsers)
 
@@ -251,7 +253,8 @@ export function Session() {
         `${logo[3] ?? ""}`,
         ``,
         `  ${weak("Session")}${UI.Style.TEXT_NORMAL_BOLD}${title}${UI.Style.TEXT_NORMAL}`,
-        `  ${weak("Continue")}${UI.Style.TEXT_NORMAL_BOLD}devpilot -s ${session()?.id}${UI.Style.TEXT_NORMAL}`,
+        // CUSTOM: DevPilot rebrand
+        `  ${weak("Continue")}${UI.Style.TEXT_NORMAL_BOLD}${Brand.cmd} -s ${session()?.id}${UI.Style.TEXT_NORMAL}`,
         ``,
       ].join("\n"),
     )

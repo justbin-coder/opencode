@@ -59,6 +59,8 @@ import { TuiConfigProvider, useTuiConfig } from "./context/tui-config"
 import { TuiConfig } from "@/config/tui"
 import { createTuiApi, TuiPluginRuntime, type RouteMap } from "./plugin"
 import { FormatError, FormatUnknownError } from "@/cli/error"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 async function getTerminalBackgroundColor(): Promise<"dark" | "light"> {
   // can't set raw mode if not a TTY
@@ -342,15 +344,17 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
   createEffect(() => {
     if (!terminalTitleEnabled() || Flag.OPENCODE_DISABLE_TERMINAL_TITLE) return
 
+    // CUSTOM: DevPilot rebrand
     if (route.data.type === "home") {
-      renderer.setTerminalTitle("DevPilot")
+      renderer.setTerminalTitle(Brand.name)
       return
     }
 
+    // CUSTOM: DevPilot rebrand
     if (route.data.type === "session") {
       const session = sync.session.get(route.data.sessionID)
       if (!session || SessionApi.isDefaultTitle(session.title)) {
-        renderer.setTerminalTitle("DevPilot")
+        renderer.setTerminalTitle(Brand.name)
         return
       }
 
@@ -626,7 +630,8 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     {
       title: "View status",
       keybind: "status_view",
-      value: "opencode.status",
+      // CUSTOM: DevPilot rebrand
+      value: 'opencode.status',
       slash: {
         name: "status",
       },
@@ -863,7 +868,8 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     await DialogAlert.show(
       dialog,
       "Update Complete",
-      `Successfully updated to OpenCode v${result.data.version}. Please restart the application.`,
+      // CUSTOM: DevPilot rebrand
+      `Successfully updated to ${Brand.name} v${result.data.version}. Please restart the application.`,
     )
 
     exit()

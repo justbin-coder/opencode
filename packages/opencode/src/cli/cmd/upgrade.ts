@@ -2,10 +2,13 @@ import type { Argv } from "yargs"
 import { UI } from "../ui"
 import * as prompts from "@clack/prompts"
 import { Installation } from "../../installation"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 export const UpgradeCommand = {
   command: "upgrade [target]",
-  describe: "upgrade devpilot to the latest or a specific version",
+  // CUSTOM: DevPilot rebrand
+  describe: `upgrade ${Brand.cmd} to the latest or a specific version`,
   builder: (yargs: Argv) => {
     return yargs
       .positional("target", {
@@ -27,7 +30,8 @@ export const UpgradeCommand = {
     const detectedMethod = await Installation.method()
     const method = (args.method as Installation.Method) ?? detectedMethod
     if (method === "unknown") {
-      prompts.log.error(`devpilot is installed to ${process.execPath} and may be managed by a package manager`)
+      // CUSTOM: DevPilot rebrand
+      prompts.log.error(`${Brand.cmd} is installed to ${process.execPath} and may be managed by a package manager`)
       const install = await prompts.select({
         message: "Install anyways?",
         options: [
@@ -45,7 +49,8 @@ export const UpgradeCommand = {
     const target = args.target ? args.target.replace(/^v/, "") : await Installation.latest()
 
     if (Installation.VERSION === target) {
-      prompts.log.warn(`devpilot upgrade skipped: ${target} is already installed`)
+      // CUSTOM: DevPilot rebrand
+      prompts.log.warn(`${Brand.cmd} upgrade skipped: ${target} is already installed`)
       prompts.outro("Done")
       return
     }

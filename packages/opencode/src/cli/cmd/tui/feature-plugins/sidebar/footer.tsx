@@ -1,6 +1,8 @@
 import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@opencode-ai/plugin/tui"
 import { createMemo, Show } from "solid-js"
 import { Global } from "@/global"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 const id = "internal:sidebar-footer"
 
@@ -8,7 +10,8 @@ function View(props: { api: TuiPluginApi }) {
   const theme = () => props.api.theme.current
   const has = createMemo(() =>
     props.api.state.provider.some(
-      (item) => item.id !== "opencode" || Object.values(item.models).some((model) => model.cost?.input !== 0),
+      // CUSTOM: DevPilot rebrand
+      (item) => item.id !== 'opencode' || Object.values(item.models).some((model) => model.cost?.input !== 0),
     ),
   )
   const done = createMemo(() => props.api.kv.get("dismissed_getting_started", false))
@@ -48,7 +51,8 @@ function View(props: { api: TuiPluginApi }) {
                 ✕
               </text>
             </box>
-            <text fg={theme().textMuted}>DevPilot includes free models so you can start immediately.</text>
+            {/* CUSTOM: DevPilot rebrand */}
+            <text fg={theme().textMuted}>{`${Brand.name} includes free models so you can start immediately.`}</text>
             <text fg={theme().textMuted}>
               Connect from 75+ providers to use other models, including Claude, GPT, Gemini etc
             </text>

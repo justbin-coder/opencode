@@ -8,6 +8,8 @@ import path from "path"
 import os from "os"
 import { Filesystem } from "../../util/filesystem"
 import { Process } from "../../util/process"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 interface UninstallArgs {
   keepConfig: boolean
@@ -24,7 +26,8 @@ interface RemovalTargets {
 
 export const UninstallCommand = {
   command: "uninstall",
-  describe: "uninstall devpilot and remove all related files",
+  // CUSTOM: DevPilot rebrand
+  describe: `uninstall ${Brand.cmd} and remove all related files`,
   builder: (yargs: Argv) =>
     yargs
       .option("keep-config", {
@@ -55,7 +58,8 @@ export const UninstallCommand = {
     UI.empty()
     UI.println(UI.logo("  "))
     UI.empty()
-    prompts.intro("Uninstall DevPilot")
+    // CUSTOM: DevPilot rebrand
+    prompts.intro(`Uninstall ${Brand.name}`)
 
     const method = await Installation.method()
     prompts.log.info(`Installation method: ${method}`)
@@ -180,19 +184,27 @@ async function executeUninstall(method: Installation.Method, targets: RemovalTar
 
   if (method !== "curl" && method !== "unknown") {
     const cmds: Record<string, string[]> = {
-      npm: ["npm", "uninstall", "-g", "opencode-ai"],
-      pnpm: ["pnpm", "uninstall", "-g", "opencode-ai"],
-      bun: ["bun", "remove", "-g", "opencode-ai"],
-      yarn: ["yarn", "global", "remove", "opencode-ai"],
-      brew: ["brew", "uninstall", "opencode"],
-      choco: ["choco", "uninstall", "opencode"],
-      scoop: ["scoop", "uninstall", "opencode"],
+      // CUSTOM: DevPilot rebrand
+      npm: ['npm', 'uninstall', '-g', 'opencode-ai'],
+      // CUSTOM: DevPilot rebrand
+      pnpm: ['pnpm', 'uninstall', '-g', 'opencode-ai'],
+      // CUSTOM: DevPilot rebrand
+      bun: ['bun', 'remove', '-g', 'opencode-ai'],
+      // CUSTOM: DevPilot rebrand
+      yarn: ['yarn', 'global', 'remove', 'opencode-ai'],
+      // CUSTOM: DevPilot rebrand
+      brew: ['brew', 'uninstall', 'opencode'],
+      // CUSTOM: DevPilot rebrand
+      choco: ['choco', 'uninstall', 'opencode'],
+      // CUSTOM: DevPilot rebrand
+      scoop: ['scoop', 'uninstall', 'opencode'],
     }
 
     const cmd = cmds[method]
     if (cmd) {
       spinner.start(`Running ${cmd.join(" ")}...`)
-      const result = await Process.run(method === "choco" ? ["choco", "uninstall", "opencode", "-y", "-r"] : cmd, {
+      // CUSTOM: DevPilot rebrand
+      const result = await Process.run(method === "choco" ? ['choco', 'uninstall', 'opencode', '-y', '-r'] : cmd, {
         nothrow: true,
       })
       if (result.code !== 0) {
@@ -229,7 +241,8 @@ async function executeUninstall(method: Installation.Method, targets: RemovalTar
   }
 
   UI.empty()
-  prompts.log.success("Thank you for using DevPilot!")
+  // CUSTOM: DevPilot rebrand
+  prompts.log.success(`Thank you for using ${Brand.name}!`)
 }
 
 async function getShellConfigFile(): Promise<string | null> {

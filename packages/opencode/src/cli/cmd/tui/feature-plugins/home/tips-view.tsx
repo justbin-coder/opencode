@@ -1,5 +1,7 @@
 import { For } from "solid-js"
 import { DEFAULT_THEMES, useTheme } from "@tui/context/theme"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 const themeCount = Object.keys(DEFAULT_THEMES).length
 const themeTip = `Use {highlight}/themes{/highlight} or {highlight}Ctrl+X T{/highlight} to switch between ${themeCount} built-in themes`
@@ -80,14 +82,17 @@ const TIPS = [
   "Switch to {highlight}Plan{/highlight} agent to get suggestions without making actual changes",
   "Use {highlight}@agent-name{/highlight} in prompts to invoke specialized subagents",
   "Press {highlight}Ctrl+X Right/Left{/highlight} to cycle through parent and child sessions",
-  "Create {highlight}devpilot.json{/highlight} for server settings and {highlight}tui.json{/highlight} for TUI settings",
-  "Place TUI settings in {highlight}~/.config/devpilot/tui.json{/highlight} for global config",
+  // CUSTOM: DevPilot rebrand
+  `Create {highlight}${Brand.config}.json{/highlight} for server settings and {highlight}tui.json{/highlight} for TUI settings`,
+  // CUSTOM: DevPilot rebrand
+  `Place TUI settings in {highlight}~/.config/${Brand.configDir}/tui.json{/highlight} for global config`,
   "Add {highlight}$schema{/highlight} to your config for autocomplete in your editor",
   "Configure {highlight}model{/highlight} in config to set your default model",
   "Override any keybind in {highlight}tui.json{/highlight} via the {highlight}keybinds{/highlight} section",
   "Set any keybind to {highlight}none{/highlight} to disable it completely",
   "Configure local or remote MCP servers in the {highlight}mcp{/highlight} config section",
-  "DevPilot auto-handles OAuth for remote MCP servers requiring auth",
+  // CUSTOM: DevPilot rebrand
+  `${Brand.name} auto-handles OAuth for remote MCP servers requiring auth`,
   "Add {highlight}.md{/highlight} files to {highlight}.opencode/command/{/highlight} to define reusable custom prompts",
   "Use {highlight}$ARGUMENTS{/highlight}, {highlight}$1{/highlight}, {highlight}$2{/highlight} in custom commands for dynamic input",
   "Use backticks in commands to inject shell output (e.g., {highlight}`git status`{/highlight})",
@@ -96,24 +101,35 @@ const TIPS = [
   'Use patterns like {highlight}"git *": "allow"{/highlight} for granular bash permissions',
   'Set {highlight}"rm -rf *": "deny"{/highlight} to block destructive commands',
   'Configure {highlight}"git push": "ask"{/highlight} to require approval before pushing',
-  "DevPilot auto-formats files using prettier, gofmt, ruff, and more",
+  // CUSTOM: DevPilot rebrand
+  `${Brand.name} auto-formats files using prettier, gofmt, ruff, and more`,
   'Set {highlight}"formatter": false{/highlight} in config to disable all auto-formatting',
   "Define custom formatter commands with file extensions in config",
-  "DevPilot uses LSP servers for intelligent code analysis",
+  // CUSTOM: DevPilot rebrand
+  `${Brand.name} uses LSP servers for intelligent code analysis`,
   "Create {highlight}.ts{/highlight} files in {highlight}.opencode/tools/{/highlight} to define new LLM tools",
   "Tool definitions can invoke scripts written in Python, Go, etc",
   "Add {highlight}.ts{/highlight} files to {highlight}.opencode/plugin/{/highlight} for event hooks",
   "Use plugins to send OS notifications when sessions complete",
-  "Create a plugin to prevent DevPilot from reading sensitive files",
-  "Use {highlight}devpilot run{/highlight} for non-interactive scripting",
-  "Use {highlight}devpilot --continue{/highlight} to resume the last session",
-  "Use {highlight}devpilot run -f file.ts{/highlight} to attach files via CLI",
+  // CUSTOM: DevPilot rebrand
+  `Create a plugin to prevent ${Brand.name} from reading sensitive files`,
+  // CUSTOM: DevPilot rebrand
+  `Use {highlight}${Brand.cmd} run{/highlight} for non-interactive scripting`,
+  // CUSTOM: DevPilot rebrand
+  `Use {highlight}${Brand.cmd} --continue{/highlight} to resume the last session`,
+  // CUSTOM: DevPilot rebrand
+  `Use {highlight}${Brand.cmd} run -f file.ts{/highlight} to attach files via CLI`,
   "Use {highlight}--format json{/highlight} for machine-readable output in scripts",
-  "Run {highlight}devpilot serve{/highlight} for headless API access to DevPilot",
-  "Use {highlight}devpilot run --attach{/highlight} to connect to a running server",
-  "Run {highlight}devpilot upgrade{/highlight} to update to the latest version",
-  "Run {highlight}devpilot auth list{/highlight} to see all configured providers",
-  "Run {highlight}devpilot agent create{/highlight} for guided agent creation",
+  // CUSTOM: DevPilot rebrand
+  `Run {highlight}${Brand.cmd} serve{/highlight} for headless API access to ${Brand.name}`,
+  // CUSTOM: DevPilot rebrand
+  `Use {highlight}${Brand.cmd} run --attach{/highlight} to connect to a running server`,
+  // CUSTOM: DevPilot rebrand
+  `Run {highlight}${Brand.cmd} upgrade{/highlight} to update to the latest version`,
+  // CUSTOM: DevPilot rebrand
+  `Run {highlight}${Brand.cmd} auth list{/highlight} to see all configured providers`,
+  // CUSTOM: DevPilot rebrand
+  `Run {highlight}${Brand.cmd} agent create{/highlight} for guided agent creation`,
   "Comment {highlight}/oc{/highlight} on PR code lines for targeted code reviews",
   'Use {highlight}"theme": "system"{/highlight} to match your terminal\'s colors',
   "Create JSON theme files in {highlight}.opencode/themes/{/highlight} directory",
@@ -132,7 +148,8 @@ const TIPS = [
   "Run {highlight}/unshare{/highlight} to remove a session from public access",
   "Permission {highlight}doom_loop{/highlight} prevents infinite tool call loops",
   "Permission {highlight}external_directory{/highlight} protects files outside project",
-  "Run {highlight}devpilot debug config{/highlight} to troubleshoot configuration",
+  // CUSTOM: DevPilot rebrand
+  `Run {highlight}${Brand.cmd} debug config{/highlight} to troubleshoot configuration`,
   "Use {highlight}--print-logs{/highlight} flag to see detailed logs in stderr",
   "Press {highlight}Ctrl+X G{/highlight} or {highlight}/timeline{/highlight} to jump to specific messages",
   "Press {highlight}Ctrl+X H{/highlight} to toggle code block visibility in messages",

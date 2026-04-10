@@ -8,11 +8,14 @@ import { createDialogProviderOptions, DialogProvider } from "./dialog-provider"
 import { DialogVariant } from "./dialog-variant"
 import { useKeybind } from "../context/keybind"
 import * as fuzzysort from "fuzzysort"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 export function useConnected() {
   const sync = useSync()
   return createMemo(() =>
-    sync.data.provider.some((x) => x.id !== "opencode" || Object.values(x.models).some((y) => y.cost?.input !== 0)),
+    // CUSTOM: DevPilot rebrand
+    sync.data.provider.some((x) => x.id !== 'opencode' || Object.values(x.models).some((y) => y.cost?.input !== 0)),
   )
 }
 
@@ -46,7 +49,8 @@ export function DialogModel(props: { providerID?: string }) {
             key: item,
             value: { providerID: provider.id, modelID: model.id },
             title: model.name ?? item.modelID,
-            description: provider.name,
+            // CUSTOM: DevPilot rebrand
+            description: Brand.providerDisplayName(provider.id, provider.name),
             category,
             disabled: provider.id === "opencode" && model.id.includes("-nano"),
             footer: model.cost?.input === 0 && provider.id === "opencode" ? "Free" : undefined,
@@ -84,7 +88,8 @@ export function DialogModel(props: { providerID?: string }) {
             description: favorites.some((item) => item.providerID === provider.id && item.modelID === model)
               ? "(Favorite)"
               : undefined,
-            category: connected() ? provider.name : undefined,
+            // CUSTOM: DevPilot rebrand
+            category: connected() ? Brand.providerDisplayName(provider.id, provider.name) : undefined,
             disabled: provider.id === "opencode" && model.includes("-nano"),
             footer: info.cost?.input === 0 && provider.id === "opencode" ? "Free" : undefined,
             onSelect() {
@@ -132,7 +137,8 @@ export function DialogModel(props: { providerID?: string }) {
     props.providerID ? sync.data.provider.find((x) => x.id === props.providerID) : null,
   )
 
-  const title = createMemo(() => provider()?.name ?? "Select model")
+  // CUSTOM: DevPilot rebrand
+  const title = createMemo(() => Brand.providerDisplayName(provider()?.id ?? "", provider()?.name ?? "") || "Select model")
 
   function onSelect(providerID: string, modelID: string) {
     local.model.set({ providerID, modelID }, { recent: true })

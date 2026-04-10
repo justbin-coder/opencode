@@ -13,6 +13,8 @@ import { DialogModel } from "./dialog-model"
 import { useKeyboard } from "@opentui/solid"
 import { Clipboard } from "@tui/util/clipboard"
 import { useToast } from "../ui/toast"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 // CUSTOM: DevPilot rebrand — 移除 opencode/opencode-go 的优先级，将其归入 Other 分类
 // 上游 opencode/opencode-go provider 需要外网 API Key，离线部署不适用，不在 Popular 中推荐
@@ -33,7 +35,8 @@ export function createDialogProviderOptions() {
       sync.data.provider_next.all,
       sortBy((x) => PROVIDER_PRIORITY[x.id] ?? 99),
       map((provider) => ({
-        title: provider.name,
+        // CUSTOM: DevPilot rebrand
+        title: Brand.providerDisplayName(provider.id, provider.name),
         value: provider.id,
         description: {
           anthropic: "(API key)",
@@ -242,7 +245,8 @@ function ApiMethod(props: ApiMethodProps) {
               </text>
             </box>
           ),
-          "opencode-go": (
+          // CUSTOM: DevPilot rebrand
+          'opencode-go': (
             <box gap={1}>
               <text fg={theme.textMuted}>
                 Enter your API key to enable this provider.

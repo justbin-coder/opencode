@@ -3,10 +3,13 @@ import { cmd } from "./cmd"
 import { Instance } from "@/project/instance"
 import { Process } from "@/util/process"
 import { git } from "@/util/git"
+// CUSTOM: DevPilot rebrand
+import { Brand } from "@/brand"
 
 export const PrCommand = cmd({
   command: "pr <number>",
-  describe: "fetch and checkout a GitHub PR branch, then run devpilot",
+  // CUSTOM: DevPilot rebrand
+  describe: `fetch and checkout a GitHub PR branch, then run ${Brand.cmd}`,
   builder: (yargs) =>
     yargs.positional("number", {
       type: "number",
@@ -87,10 +90,12 @@ export const PrCommand = cmd({
               const sessionMatch = prInfo.body.match(/https:\/\/opncd\.ai\/s\/([a-zA-Z0-9_-]+)/)
               if (sessionMatch) {
                 const sessionUrl = sessionMatch[0]
-                UI.println(`Found DevPilot session: ${sessionUrl}`)
+                // CUSTOM: DevPilot rebrand
+                UI.println(`Found ${Brand.name} session: ${sessionUrl}`)
                 UI.println(`Importing session...`)
 
-                const importResult = await Process.text(["opencode", "import", sessionUrl], {
+                // CUSTOM: DevPilot rebrand
+                const importResult = await Process.text([Brand.cmd, "import", sessionUrl], {
                   nothrow: true,
                 })
                 if (importResult.code === 0) {
@@ -109,18 +114,21 @@ export const PrCommand = cmd({
 
         UI.println(`Successfully checked out PR #${prNumber} as branch '${localBranchName}'`)
         UI.println()
-        UI.println("Starting DevPilot...")
+        // CUSTOM: DevPilot rebrand
+        UI.println(`Starting ${Brand.name}...`)
         UI.println()
 
         const opencodeArgs = sessionId ? ["-s", sessionId] : []
-        const opencodeProcess = Process.spawn(["devpilot", ...opencodeArgs], {
+        // CUSTOM: DevPilot rebrand
+        const opencodeProcess = Process.spawn([Brand.cmd, ...opencodeArgs], {
           stdin: "inherit",
           stdout: "inherit",
           stderr: "inherit",
           cwd: process.cwd(),
         })
         const code = await opencodeProcess.exited
-        if (code !== 0) throw new Error(`devpilot exited with code ${code}`)
+        // CUSTOM: DevPilot rebrand
+        if (code !== 0) throw new Error(`${Brand.cmd} exited with code ${code}`)
       },
     })
   },
