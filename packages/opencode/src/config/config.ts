@@ -384,9 +384,9 @@ export namespace Config {
    * Deduplicates plugins by name, with later entries (higher priority) winning.
    * Priority order (highest to lowest):
    * 1. Local plugin/ directory
-   * 2. Local opencode.json
+   * 2. Local devpilot.json
    * 3. Global plugin/ directory
-   * 4. Global opencode.json
+   * 4. Global devpilot.json
    *
    * Since plugins are added in low-to-high priority order,
    * we reverse, deduplicate (keeping first occurrence), then restore order.
@@ -1101,7 +1101,8 @@ export namespace Config {
   export class Service extends ServiceMap.Service<Service, Interface>()("@opencode/Config") {}
 
   function globalConfigFile() {
-    const candidates = ["opencode.jsonc", "opencode.json", "config.json"].map((file) =>
+    // CUSTOM: DevPilot rebrand — 全局配置文件名
+    const candidates = ["devpilot.jsonc", "devpilot.json", "config.json"].map((file) =>
       path.join(Global.Path.config, file),
     )
     for (const file of candidates) {
@@ -1250,8 +1251,8 @@ export namespace Config {
           let result: Info = pipe(
             {},
             mergeDeep(yield* loadFile(path.join(Global.Path.config, "config.json"))),
-            mergeDeep(yield* loadFile(path.join(Global.Path.config, "opencode.json"))),
-            mergeDeep(yield* loadFile(path.join(Global.Path.config, "opencode.jsonc"))),
+            mergeDeep(yield* loadFile(path.join(Global.Path.config, "devpilot.json"))),
+            mergeDeep(yield* loadFile(path.join(Global.Path.config, "devpilot.jsonc"))),
           )
 
           const legacy = path.join(Global.Path.config, "config")
@@ -1343,7 +1344,7 @@ export namespace Config {
 
           for (const dir of unique(directories)) {
             if (dir.endsWith(".opencode") || dir === Flag.OPENCODE_CONFIG_DIR) {
-              for (const file of ["opencode.jsonc", "opencode.json"]) {
+              for (const file of ["devpilot.jsonc", "devpilot.json"]) {
                 log.debug(`loading config from ${path.join(dir, file)}`)
                 result = mergeConfigConcatArrays(result, yield* loadFile(path.join(dir, file)))
                 result.agent ??= {}
@@ -1412,7 +1413,7 @@ export namespace Config {
           }
 
           if (existsSync(managedDir)) {
-            for (const file of ["opencode.jsonc", "opencode.json"]) {
+            for (const file of ["devpilot.jsonc", "devpilot.json"]) {
               result = mergeConfigConcatArrays(result, yield* loadFile(path.join(managedDir, file)))
             }
           }
