@@ -1251,6 +1251,7 @@ export namespace Config {
           let result: Info = pipe(
             {},
             mergeDeep(yield* loadFile(path.join(Global.Path.config, "config.json"))),
+            // CUSTOM: DevPilot rebrand — loadGlobal 配置文件名
             mergeDeep(yield* loadFile(path.join(Global.Path.config, "devpilot.json"))),
             mergeDeep(yield* loadFile(path.join(Global.Path.config, "devpilot.jsonc"))),
           )
@@ -1344,6 +1345,7 @@ export namespace Config {
 
           for (const dir of unique(directories)) {
             if (dir.endsWith(".opencode") || dir === Flag.OPENCODE_CONFIG_DIR) {
+              // CUSTOM: DevPilot rebrand — 目录遍历配置文件名
               for (const file of ["devpilot.jsonc", "devpilot.json"]) {
                 log.debug(`loading config from ${path.join(dir, file)}`)
                 result = mergeConfigConcatArrays(result, yield* loadFile(path.join(dir, file)))
@@ -1413,6 +1415,7 @@ export namespace Config {
           }
 
           if (existsSync(managedDir)) {
+            // CUSTOM: DevPilot rebrand — managedDir 配置文件名
             for (const file of ["devpilot.jsonc", "devpilot.json"]) {
               result = mergeConfigConcatArrays(result, yield* loadFile(path.join(managedDir, file)))
             }
