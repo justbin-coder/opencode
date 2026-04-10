@@ -60,7 +60,8 @@ export namespace Config {
       case "darwin":
         return "/Library/Application Support/opencode"
       case "win32":
-        return path.join(process.env.ProgramData || "C:\\ProgramData", "opencode")
+        // CUSTOM: DevPilot rebrand — Windows ProgramData fallback 路径
+      return path.join(process.env.ProgramData || "C:\\ProgramData", "devpilot")
       default:
         return "/etc/opencode"
     }
