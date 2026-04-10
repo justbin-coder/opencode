@@ -70,16 +70,12 @@ export function Logo() {
     return elements
   }
 
-  // CUSTOM: DevPilot rebrand — 左右边栏按行三色配色
-  // row 0: textMuted（空行）
-  // row 1: primary（橙）— 产品名 + 左侧边栏高亮
-  // row 2: textMuted（灰）— 分隔线
-  // row 3: accent（紫）— 标语 + 左侧边栏色点
-  const leftColor = (index: number): RGBA => {
-    if (index === 1) return theme.primary
-    if (index === 3) return theme.accent
-    return theme.textMuted
-  }
+  // CUSTOM: DevPilot rebrand — 左侧 "D" 标识整体橙色，右侧三色层次
+  // left: 全行使用 theme.primary（橙），D 字形作为统一品牌色块
+  // right row[1]: primary bold — 产品名
+  // right row[2]: textMuted — 分隔线
+  // right row[3]: accent（紫）— 标语
+  const leftColor = (_index: number): RGBA => theme.primary
 
   const rightColor = (index: number): RGBA => {
     if (index === 1) return theme.primary
