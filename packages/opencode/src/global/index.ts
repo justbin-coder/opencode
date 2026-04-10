@@ -4,7 +4,8 @@ import path from "path"
 import os from "os"
 import { Filesystem } from "../util/filesystem"
 
-const app = "opencode"
+// CUSTOM: DevPilot rebrand — 全局配置目录名，影响 ~/.config/devpilot/ 和 %APPDATA%\devpilot\
+const app = "devpilot"
 
 const data = path.join(xdgData!, app)
 const cache = path.join(xdgCache!, app)
