@@ -98,29 +98,62 @@ function symlinkBinary(sourcePath, binaryName) {
   }
 }
 
+// CUSTOM: DevPilot rebrand — 将预置 Skills 部署到全局配置目录
+async function deploySkills() {
+  const skillsSrc = path.join(__dirname, "..", "skills")
+  const commandsSrc = path.join(__dirname, "..", "commands")
+
+  // 全局配置目录（xdg-basedir：macOS/Linux=~/.config/devpilot，Windows=%APPDATA%\devpilot）
+  const configBase = process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config")
+  const configDir = path.join(configBase, "devpilot")
+
+  const skillsDest = path.join(configDir, "skills")
+  const commandsDest = path.join(configDir, "commands")
+
+  fs.mkdirSync(skillsDest, { recursive: true })
+  fs.mkdirSync(commandsDest, { recursive: true })
+
+  // 复制 skills
+  if (fs.existsSync(skillsSrc)) {
+    fs.cpSync(skillsSrc, skillsDest, { recursive: true, force: true })
+    console.log(`DevPilot skills deployed to ${skillsDest}`)
+  }
+  // 复制 commands
+  if (fs.existsSync(commandsSrc)) {
+    fs.cpSync(commandsSrc, commandsDest, { recursive: true, force: true })
+    console.log(`DevPilot commands deployed to ${commandsDest}`)
+  }
+}
+
 async function main() {
   try {
     if (os.platform() === "win32") {
       // On Windows, the .exe is already included in the package and bin field points to it
       // No postinstall setup needed
       console.log("Windows detected: binary setup not needed (using packaged .exe)")
+      await deploySkills()  // CUSTOM: 部署 Skills
       return
     }
 
     // On non-Windows platforms, just verify the binary package exists
     // Don't replace the wrapper script - it handles binary execution
-    const { binaryPath } = findBinary()
-    // CUSTOM: DevPilot rebrand — 本地缓存二进制路径
-    const target = path.join(__dirname, "bin", ".devpilot")
-    if (fs.existsSync(target)) fs.unlinkSync(target)
     try {
-      fs.linkSync(binaryPath, target)
-    } catch {
-      fs.copyFileSync(binaryPath, target)
+      const { binaryPath } = findBinary()
+      // CUSTOM: DevPilot rebrand — 本地缓存二进制路径
+      const target = path.join(__dirname, "bin", ".devpilot")
+      if (fs.existsSync(target)) fs.unlinkSync(target)
+      try {
+        fs.linkSync(binaryPath, target)
+      } catch {
+        fs.copyFileSync(binaryPath, target)
+      }
+      fs.chmodSync(target, 0o755)
+    } catch (binaryError) {
+      console.error("Failed to setup devpilot binary:", binaryError.message)
     }
-    fs.chmodSync(target, 0o755)
+    await deploySkills()  // CUSTOM: 部署 Skills（即使二进制安装失败也要执行）
   } catch (error) {
-    console.error("Failed to setup devpilot binary:", error.message)
+    console.error("Postinstall error:", error.message)
     process.exit(1)
   }
 }
