@@ -17,7 +17,8 @@ function run(target) {
   process.exit(code)
 }
 
-const envPath = process.env.OPENCODE_BIN_PATH
+// CUSTOM: DevPilot rebrand — 环境变量覆盖路径（向后兼容 OPENCODE_BIN_PATH）
+const envPath = process.env.DEVPILOT_BIN_PATH || process.env.OPENCODE_BIN_PATH
 if (envPath) {
   run(envPath)
 }
