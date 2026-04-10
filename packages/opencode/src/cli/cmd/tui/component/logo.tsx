@@ -70,9 +70,20 @@ export function Logo() {
     return elements
   }
 
-  // CUSTOM: DevPilot rebrand — 按行配色：row[1] 产品名用 primary（暖橙），其余用 textMuted
+  // CUSTOM: DevPilot rebrand — 左右边栏按行三色配色
+  // row 0: textMuted（空行）
+  // row 1: primary（橙）— 产品名 + 左侧边栏高亮
+  // row 2: textMuted（灰）— 分隔线
+  // row 3: accent（紫）— 标语 + 左侧边栏色点
+  const leftColor = (index: number): RGBA => {
+    if (index === 1) return theme.primary
+    if (index === 3) return theme.accent
+    return theme.textMuted
+  }
+
   const rightColor = (index: number): RGBA => {
     if (index === 1) return theme.primary
+    if (index === 3) return theme.accent
     return theme.textMuted
   }
 
@@ -81,7 +92,7 @@ export function Logo() {
       <For each={logo.left}>
         {(line, index) => (
           <box flexDirection="row" gap={1}>
-            <box flexDirection="row">{renderLine(line, theme.textMuted, false)}</box>
+            <box flexDirection="row">{renderLine(line, leftColor(index()), false)}</box>
             <box flexDirection="row">{renderLine(logo.right[index()], rightColor(index()), index() === 1)}</box>
           </box>
         )}
