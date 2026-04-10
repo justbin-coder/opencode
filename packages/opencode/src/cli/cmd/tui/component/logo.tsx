@@ -70,13 +70,19 @@ export function Logo() {
     return elements
   }
 
+  // CUSTOM: DevPilot rebrand — 按行配色：row[1] 产品名用 primary（暖橙），其余用 textMuted
+  const rightColor = (index: number): RGBA => {
+    if (index === 1) return theme.primary
+    return theme.textMuted
+  }
+
   return (
     <box>
       <For each={logo.left}>
         {(line, index) => (
           <box flexDirection="row" gap={1}>
             <box flexDirection="row">{renderLine(line, theme.textMuted, false)}</box>
-            <box flexDirection="row">{renderLine(logo.right[index()], theme.text, true)}</box>
+            <box flexDirection="row">{renderLine(logo.right[index()], rightColor(index()), index() === 1)}</box>
           </box>
         )}
       </For>
