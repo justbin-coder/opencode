@@ -66,10 +66,10 @@ export function DialogModel(props: { providerID?: string }) {
       "Recent",
     )
 
+    // CUSTOM: DevPilot rebrand — 按名称排序，不给 opencode provider 优先级
     const providerOptions = pipe(
       sync.data.provider,
       sortBy(
-        (provider) => provider.id !== "opencode",
         (provider) => provider.name,
       ),
       flatMap((provider) =>
