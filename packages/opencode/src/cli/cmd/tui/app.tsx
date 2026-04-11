@@ -618,6 +618,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     {
       title: "Connect provider",
       value: "provider.connect",
+      hidden: true, // CUSTOM: DevPilot lockdown
       suggested: !connected(),
       slash: {
         name: "connect",
@@ -643,6 +644,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     {
       title: "Switch theme",
       value: "theme.switch",
+      hidden: true, // CUSTOM: DevPilot lockdown
       keybind: "theme_list",
       slash: {
         name: "themes",
@@ -655,6 +657,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     {
       title: "Toggle Theme Mode",
       value: "theme.switch_mode",
+      hidden: true, // CUSTOM: DevPilot lockdown
       onSelect: (dialog) => {
         setMode(mode() === "dark" ? "light" : "dark")
         dialog.clear()
@@ -664,6 +667,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     {
       title: locked() ? "Unlock Theme Mode" : "Lock Theme Mode",
       value: "theme.mode.lock",
+      hidden: true, // CUSTOM: DevPilot lockdown
       onSelect: (dialog) => {
         if (locked()) unlock()
         else lock()
@@ -685,6 +689,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     {
       title: "Open docs",
       value: "docs.open",
+      hidden: true, // CUSTOM: DevPilot lockdown
       onSelect: () => {
         open("https://opencode.ai/docs").catch(() => {})
         dialog.clear()
@@ -705,6 +710,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       title: "Toggle debug panel",
       category: "System",
       value: "app.debug",
+      hidden: true, // CUSTOM: DevPilot lockdown
       onSelect: (dialog) => {
         renderer.toggleDebugOverlay()
         dialog.clear()
@@ -714,6 +720,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       title: "Toggle console",
       category: "System",
       value: "app.console",
+      hidden: true, // CUSTOM: DevPilot lockdown
       onSelect: (dialog) => {
         renderer.console.toggle()
         dialog.clear()
@@ -723,6 +730,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       title: "Write heap snapshot",
       category: "System",
       value: "app.heap_snapshot",
+      hidden: true, // CUSTOM: DevPilot lockdown
       onSelect: async (dialog) => {
         const files = await props.onSnapshot?.()
         toast.show({

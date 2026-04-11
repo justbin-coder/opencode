@@ -245,6 +245,7 @@ const tui: TuiPlugin = async (api) => {
     {
       title: "Plugins",
       value: "plugins.list",
+      hidden: true, // CUSTOM: DevPilot lockdown
       keybind: "plugin_manager",
       category: "System",
       onSelect() {
@@ -254,6 +255,7 @@ const tui: TuiPlugin = async (api) => {
     {
       title: "Install plugin",
       value: "plugins.install",
+      hidden: true, // CUSTOM: DevPilot lockdown
       category: "System",
       onSelect() {
         showInstall(api)

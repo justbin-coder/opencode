@@ -19,9 +19,9 @@ const tui: TuiPlugin = async (api) => {
     {
       title: api.kv.get("tips_hidden", false) ? "Show tips" : "Hide tips",
       value: "tips.toggle",
+      hidden: true, // CUSTOM: DevPilot lockdown — 合并了原 hidden 条件，Tips 面板永久隐藏
       keybind: "tips_toggle",
       category: "System",
-      hidden: api.route.current.name !== "home",
       onSelect() {
         api.kv.set("tips_hidden", !api.kv.get("tips_hidden", false))
         api.ui.dialog.clear()
@@ -35,7 +35,7 @@ const tui: TuiPlugin = async (api) => {
       home_bottom() {
         const hidden = createMemo(() => api.kv.get("tips_hidden", false))
         const first = createMemo(() => api.state.session.count() === 0)
-        const show = createMemo(() => !first() && !hidden())
+        const show = createMemo(() => false) // CUSTOM: DevPilot lockdown
         return <View show={show()} />
       },
     },

@@ -15,7 +15,8 @@ function View(props: { api: TuiPluginApi }) {
     ),
   )
   const done = createMemo(() => props.api.kv.get("dismissed_getting_started", false))
-  const show = createMemo(() => !has() && !done())
+  // CUSTOM: DevPilot lockdown — Getting Started 面板永久隐藏，客户界面不展示外部 provider 引导
+  const show = createMemo(() => false)
   const path = createMemo(() => {
     const dir = props.api.state.path.directory || process.cwd()
     const out = dir.replace(Global.Path.home, "~")

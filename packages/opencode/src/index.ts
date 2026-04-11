@@ -137,24 +137,37 @@ const cli = yargs(hideBin(process.argv))
   .command(TuiThreadCommand)
   .command(AttachCommand)
   .command(RunCommand)
-  .command(GenerateCommand)
-  .command(DebugCommand)
-  .command(ConsoleCommand)
-  .command(ProvidersCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(GenerateCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(DebugCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(ConsoleCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(ProvidersCommand)
   .command(AgentCommand)
-  .command(UpgradeCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(UpgradeCommand)
   .command(UninstallCommand)
-  .command(ServeCommand)
-  .command(WebCommand)
-  .command(ModelsCommand)
-  .command(StatsCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(ServeCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(WebCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(ModelsCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(StatsCommand)
   .command(ExportCommand)
   .command(ImportCommand)
-  .command(GithubCommand)
-  .command(PrCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(GithubCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(PrCommand)
   .command(SessionCommand)
-  .command(PluginCommand)
-  .command(DbCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(PluginCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(DbCommand)
   .fail((msg, err) => {
     if (
       msg?.startsWith("Unknown argument") ||

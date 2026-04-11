@@ -162,6 +162,7 @@ export function DialogModel(props: { providerID?: string }) {
         {
           keybind: keybind.all.model_provider_list?.[0],
           title: connected() ? "Connect provider" : "View all providers",
+          hidden: true, // CUSTOM: DevPilot lockdown
           onTrigger() {
             dialog.replace(() => <DialogProvider />)
           },
