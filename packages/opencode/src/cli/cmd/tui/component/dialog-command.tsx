@@ -64,7 +64,8 @@ function init() {
     if (suspended()) return
     if (dialog.stack.length > 0) return
     for (const option of entries()) {
-      if (!isEnabled(option)) continue
+      // CUSTOM: DevPilot lockdown — 修复 keybind 绕过：hidden 命令也必须拦截
+      if (!isVisible(option)) continue
       if (option.keybind && keybind.match(option.keybind, evt)) {
         evt.preventDefault()
         option.onSelect?.(dialog)

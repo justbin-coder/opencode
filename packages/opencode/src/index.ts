@@ -145,7 +145,8 @@ const cli = yargs(hideBin(process.argv))
   // .command(ConsoleCommand)
   // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
   // .command(ProvidersCommand)
-  .command(AgentCommand)
+  // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
+  // .command(AgentCommand)
   // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
   // .command(UpgradeCommand)
   .command(UninstallCommand)

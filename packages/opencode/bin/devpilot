@@ -17,6 +17,17 @@ function run(target) {
   process.exit(code)
 }
 
+// CUSTOM: DevPilot lockdown — L0-Config layer 注入锁定环境变量
+// CUSTOM: DevPilot lockdown — 这些 env 在子进程继承时生效，关闭外部 plugin / skill / 自动更新 / 网络拉取
+process.env.OPENCODE_PURE = process.env.OPENCODE_PURE ?? "1"
+process.env.OPENCODE_DISABLE_AUTOUPDATE = process.env.OPENCODE_DISABLE_AUTOUPDATE ?? "1"
+process.env.OPENCODE_DISABLE_MODELS_FETCH = process.env.OPENCODE_DISABLE_MODELS_FETCH ?? "1"
+process.env.OPENCODE_DISABLE_LSP_DOWNLOAD = process.env.OPENCODE_DISABLE_LSP_DOWNLOAD ?? "1"
+process.env.OPENCODE_DISABLE_CLAUDE_CODE = process.env.OPENCODE_DISABLE_CLAUDE_CODE ?? "1"
+process.env.OPENCODE_DISABLE_EXTERNAL_SKILLS = process.env.OPENCODE_DISABLE_EXTERNAL_SKILLS ?? "1"
+process.env.OPENCODE_DISABLE_AUTOCOMPACT = process.env.OPENCODE_DISABLE_AUTOCOMPACT ?? "1"
+process.env.OPENCODE_DISABLE_EMBEDDED_WEB_UI = process.env.OPENCODE_DISABLE_EMBEDDED_WEB_UI ?? "1"
+
 // CUSTOM: DevPilot rebrand — 环境变量覆盖路径（向后兼容 OPENCODE_BIN_PATH）
 const envPath = process.env.DEVPILOT_BIN_PATH || process.env.OPENCODE_BIN_PATH
 if (envPath) {
