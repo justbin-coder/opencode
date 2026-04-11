@@ -18,13 +18,6 @@ import { initEmbedder, embedBatch, chunkToEmbedText, type ModelName } from "./em
 import { VectorStore } from "./vector-store"
 import type { CodeChunk, IndexMetadata } from "./types"
 
-const INDEX_DIR = path.join(process.cwd(), ".opencode-index")
-const METADATA_PATH = path.join(INDEX_DIR, "metadata.json")
-const BM25_DB_PATH = path.join(INDEX_DIR, "bm25.db")
-const VECTORS_BIN_PATH = path.join(INDEX_DIR, "vectors.bin")
-const VECTORS_IDMAP_PATH = path.join(INDEX_DIR, "vectors.idmap")
-const CHUNKS_JSONL_PATH = path.join(INDEX_DIR, "chunks.jsonl")
-
 /** 递归收集代码库中所有 C++ 源文件 */
 async function collectCppFiles(rootDir: string): Promise<string[]> {
   const files: string[] = []
@@ -45,22 +38,22 @@ async function collectCppFiles(rootDir: string): Promise<string[]> {
   return files
 }
 
-async function main() {
-  const args = process.argv.slice(2)
-  const codeRoot = args[0]
-  if (!codeRoot) {
-    console.error("用法: bun run index <代码库路径> [--model=MINILM|BGE_M3]")
-    process.exit(1)
-  }
-
-  const modelArg = args.find((a) => a.startsWith("--model="))?.split("=")[1] ?? "MINILM"
-  const modelName = modelArg as ModelName
+export async function buildMain(codeRoot: string) {
+  const modelName: ModelName = "MINILM"
 
   const codeRootAbs = path.resolve(codeRoot)
   if (!existsSync(codeRootAbs)) {
     console.error(`代码库路径不存在: ${codeRootAbs}`)
     process.exit(1)
   }
+
+  // 索引写到 C++ 项目根目录下，与 devpilot 启动目录解耦
+  const INDEX_DIR = path.join(codeRootAbs, ".opencode-index")
+  const METADATA_PATH = path.join(INDEX_DIR, "metadata.json")
+  const BM25_DB_PATH = path.join(INDEX_DIR, "bm25.db")
+  const VECTORS_BIN_PATH = path.join(INDEX_DIR, "vectors.bin")
+  const VECTORS_IDMAP_PATH = path.join(INDEX_DIR, "vectors.idmap")
+  const CHUNKS_JSONL_PATH = path.join(INDEX_DIR, "chunks.jsonl")
 
   // 创建索引目录
   mkdirSync(INDEX_DIR, { recursive: true })
@@ -123,7 +116,15 @@ async function main() {
   console.log(`   文件数: ${files.length}，代码单元: ${allChunks.length}`)
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+// 开发态入口（仅 bun run index.ts 直接运行时执行）
+if (import.meta.main) {
+  const codeRoot = process.argv[2]
+  if (!codeRoot) {
+    console.error("用法: bun run index.ts <代码库路径>")
+    process.exit(1)
+  }
+  buildMain(codeRoot).catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
+}

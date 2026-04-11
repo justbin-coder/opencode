@@ -35,6 +35,8 @@ import { JsonMigration } from "./storage/json-migration"
 import { Database } from "./storage/db"
 import { errorMessage } from "./util/error"
 import { PluginCommand } from "./cli/cmd/plug"
+// CUSTOM: DevPilot — 注册索引构建命令
+import { IndexCommand } from "./cli/cmd/index-cmd"
 
 process.on("unhandledRejection", (e) => {
   Log.Default.error("rejection", {
@@ -169,6 +171,8 @@ const cli = yargs(hideBin(process.argv))
   // .command(PluginCommand)
   // CUSTOM: DevPilot lockdown — 非交付功能，客户界面不暴露
   // .command(DbCommand)
+  // CUSTOM: DevPilot — 注册索引构建命令（内部子命令，不显示在用户面板）
+  .command(IndexCommand)
   .fail((msg, err) => {
     if (
       msg?.startsWith("Unknown argument") ||
