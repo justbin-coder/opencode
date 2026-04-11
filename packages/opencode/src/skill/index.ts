@@ -165,22 +165,25 @@ export namespace Skill {
     }
 
     const cfg = yield* config.get()
-    for (const item of cfg.skills?.paths ?? []) {
-      const expanded = item.startsWith("~/") ? path.join(os.homedir(), item.slice(2)) : item
-      const dir = path.isAbsolute(expanded) ? expanded : path.join(directory, expanded)
-      if (!(yield* fsys.isDir(dir))) {
-        log.warn("skill path not found", { path: dir })
-        continue
+    // CUSTOM: DevPilot lockdown — 严格白名单：仅允许 .opencode/skills/* 与 config.directories()，跳过 cfg.skills.paths 与 cfg.skills.urls
+    if (!Flag.OPENCODE_DISABLE_EXTERNAL_SKILLS) {
+      for (const item of cfg.skills?.paths ?? []) {
+        const expanded = item.startsWith("~/") ? path.join(os.homedir(), item.slice(2)) : item
+        const dir = path.isAbsolute(expanded) ? expanded : path.join(directory, expanded)
+        if (!(yield* fsys.isDir(dir))) {
+          log.warn("skill path not found", { path: dir })
+          continue
+        }
+
+        yield* scan(state, bus, dir, SKILL_PATTERN)
       }
 
-      yield* scan(state, bus, dir, SKILL_PATTERN)
-    }
-
-    for (const url of cfg.skills?.urls ?? []) {
-      const pulledDirs = yield* discovery.pull(url)
-      for (const dir of pulledDirs) {
-        state.dirs.add(dir)
-        yield* scan(state, bus, dir, SKILL_PATTERN)
+      for (const url of cfg.skills?.urls ?? []) {
+        const pulledDirs = yield* discovery.pull(url)
+        for (const dir of pulledDirs) {
+          state.dirs.add(dir)
+          yield* scan(state, bus, dir, SKILL_PATTERN)
+        }
       }
     }
 

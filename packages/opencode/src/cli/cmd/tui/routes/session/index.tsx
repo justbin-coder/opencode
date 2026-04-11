@@ -364,6 +364,8 @@ export function Session() {
       suggested: route.type === "session",
       keybind: "session_share",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       enabled: sync.data.config.share !== "disabled",
       slash: {
         name: "share",
@@ -410,6 +412,8 @@ export function Session() {
       value: "session.timeline",
       keybind: "session_timeline",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       slash: {
         name: "timeline",
       },
@@ -433,6 +437,8 @@ export function Session() {
       value: "session.fork",
       keybind: "session_fork",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       slash: {
         name: "fork",
       },
@@ -455,6 +461,8 @@ export function Session() {
       value: "session.compact",
       keybind: "session_compact",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       slash: {
         name: "compact",
         aliases: ["summarize"],
@@ -482,6 +490,8 @@ export function Session() {
       value: "session.unshare",
       keybind: "session_unshare",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       enabled: !!session()?.share?.url,
       slash: {
         name: "unshare",
@@ -506,6 +516,8 @@ export function Session() {
       value: "session.undo",
       keybind: "messages_undo",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       slash: {
         name: "undo",
       },
@@ -544,6 +556,8 @@ export function Session() {
       value: "session.redo",
       keybind: "messages_redo",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       enabled: !!session()?.revert?.messageID,
       slash: {
         name: "redo",
@@ -585,6 +599,8 @@ export function Session() {
       value: "session.toggle.conceal",
       keybind: "messages_toggle_conceal" as any,
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       onSelect: (dialog) => {
         setConceal((prev) => !prev)
         dialog.clear()
@@ -594,6 +610,8 @@ export function Session() {
       title: showTimestamps() ? "Hide timestamps" : "Show timestamps",
       value: "session.toggle.timestamps",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       slash: {
         name: "timestamps",
         aliases: ["toggle-timestamps"],
@@ -608,6 +626,8 @@ export function Session() {
       value: "session.toggle.thinking",
       keybind: "display_thinking",
       category: "Session",
+      // CUSTOM: DevPilot lockdown — 非交付功能
+      hidden: true,
       slash: {
         name: "thinking",
         aliases: ["toggle-thinking"],
