@@ -265,10 +265,12 @@ export const InstanceRoutes = (app?: Hono) =>
         } else {
           return c.json({ error: "Not Found" }, 404)
         }
-      } else {
-        const response = await proxy(`https://app.opencode.ai${path}`, {
-          ...c.req,
-          headers: {
+        } else {
+          // CUSTOM: DevPilot lockdown — 禁用内嵌 Web UI 时不再回退到远端代理
+          if (Flag.OPENCODE_DISABLE_EMBEDDED_WEB_UI) return c.json({ error: "Not Found" }, 404)
+          const response = await proxy(`https://app.opencode.ai${path}`, {
+            ...c.req,
+            headers: {
             ...c.req.raw.headers,
             host: "app.opencode.ai",
           },

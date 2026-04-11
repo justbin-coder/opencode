@@ -409,7 +409,8 @@ export namespace Provider {
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://opencode.ai/",
+            // CUSTOM: DevPilot lockdown — 品牌清洗
+            "HTTP-Referer": "https://devpilot.local/",
             "X-Title": "opencode",
           },
         },
@@ -420,7 +421,8 @@ export namespace Provider {
         autoload: false,
         options: {
           headers: {
-            "http-referer": "https://opencode.ai/",
+            // CUSTOM: DevPilot lockdown — 品牌清洗
+            "http-referer": "https://devpilot.local/",
             "x-title": "opencode",
           },
         },
@@ -519,7 +521,8 @@ export namespace Provider {
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://opencode.ai/",
+            // CUSTOM: DevPilot lockdown — 品牌清洗
+            "HTTP-Referer": "https://devpilot.local/",
             "X-Title": "opencode",
           },
         },
@@ -763,7 +766,8 @@ export namespace Provider {
         autoload: false,
         options: {
           headers: {
-            "HTTP-Referer": "https://opencode.ai/",
+            // CUSTOM: DevPilot lockdown — 品牌清洗
+            "HTTP-Referer": "https://devpilot.local/",
             "X-Title": "opencode",
           },
         },

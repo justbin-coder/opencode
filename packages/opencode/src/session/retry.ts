@@ -53,8 +53,9 @@ export namespace SessionRetry {
     if (MessageV2.ContextOverflowError.isInstance(error)) return undefined
     if (MessageV2.APIError.isInstance(error)) {
       if (!error.data.isRetryable) return undefined
+      // CUSTOM: DevPilot lockdown — 品牌清洗
       if (error.data.responseBody?.includes("FreeUsageLimitError"))
-        return `Free usage exceeded, add credits https://opencode.ai/zen`
+        return "Provider 调用失败，请检查模型配置或稍后重试"
       return error.data.message.includes("Overloaded") ? "Provider is overloaded" : error.data.message
     }
 

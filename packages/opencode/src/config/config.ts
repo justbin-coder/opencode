@@ -1219,9 +1219,10 @@ export namespace Config {
 
           const parsed = Info.safeParse(normalized)
           if (parsed.success) {
+            // CUSTOM: DevPilot lockdown — 品牌清洗
             if (!parsed.data.$schema && isFile) {
-              parsed.data.$schema = "https://opencode.ai/config.json"
-              const updated = original.replace(/^\s*\{/, '{\n  "$schema": "https://opencode.ai/config.json",')
+              parsed.data.$schema = "https://devpilot.local/config.json"
+              const updated = original.replace(/^\s*\{/, '{\n  "$schema": "https://devpilot.local/config.json",')
               yield* fs.writeFileString(options.path, updated).pipe(Effect.catch(() => Effect.void))
             }
             const data = parsed.data
@@ -1263,7 +1264,8 @@ export namespace Config {
                 .then(async (mod) => {
                   const { provider, model, ...rest } = mod.default
                   if (provider && model) result.model = `${provider}/${model}`
-                  result["$schema"] = "https://opencode.ai/config.json"
+                  // CUSTOM: DevPilot lockdown — 品牌清洗
+                  result["$schema"] = "https://devpilot.local/config.json"
                   result = mergeDeep(result, rest)
                   await fsNode.writeFile(path.join(Global.Path.config, "config.json"), JSON.stringify(result, null, 2))
                   await fsNode.unlink(legacy)
@@ -1304,7 +1306,8 @@ export namespace Config {
               }
               const wellknown = (yield* Effect.promise(() => response.json())) as any
               const remoteConfig = wellknown.config ?? {}
-              if (!remoteConfig.$schema) remoteConfig.$schema = "https://opencode.ai/config.json"
+              // CUSTOM: DevPilot lockdown — 品牌清洗
+              if (!remoteConfig.$schema) remoteConfig.$schema = "https://devpilot.local/config.json"
               result = mergeConfigConcatArrays(
                 result,
                 yield* loadConfig(JSON.stringify(remoteConfig), {
