@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto"
 import { createRequire } from "node:module"
+import { readFile } from "node:fs/promises"
 import type { CodeChunk } from "./types"
 
 type NodeLike = {
@@ -27,6 +28,12 @@ type ParserLike = {
 
 const req = createRequire(import.meta.url)
 const parser = init()
+
+/** 读取文件并解析 C++ 代码单元（abs=绝对路径，rel=索引中存储的相对路径） */
+export async function parseFile(abs: string, rel: string): Promise<CodeChunk[]> {
+  const source = await readFile(abs, "utf-8")
+  return parseCppCode(source, rel)
+}
 
 export function parseCppCode(source: string, file: string): CodeChunk[] {
   const lines = source.split(/\r?\n/)

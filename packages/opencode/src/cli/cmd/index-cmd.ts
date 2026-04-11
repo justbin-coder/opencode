@@ -38,7 +38,7 @@ export const IndexCommand = cmd<
   handler: async (argv) => {
     if (argv.search) {
       // 检索模式（供 cpp-code-search.ts subprocess 调用）
-      const { searchMain } = await import("../../../scripts/cpp-indexer/search")
+      const { searchMain } = await import("../../../../../scripts/cpp-indexer/search")
       await searchMain({
         indexDir: argv["index-dir"]!,
         query: argv.query!,
@@ -46,7 +46,7 @@ export const IndexCommand = cmd<
       })
     } else {
       // 构建模式（用户通过 /index 命令触发）
-      const { buildMain } = await import("../../../scripts/cpp-indexer/index")
+      const { buildMain } = await import("../../../../../scripts/cpp-indexer/index")
       await buildMain(argv.path)
     }
   },
