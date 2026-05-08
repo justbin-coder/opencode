@@ -1,0 +1,7 @@
+{
+  "cpp": {
+    "projectRoot": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project",
+    "buildDir": "build",
+    "testTargetDiscovery": "auto"
+  }
+}

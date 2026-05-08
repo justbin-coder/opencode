@@ -1,0 +1,139 @@
+Running E3 scenarios in /Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project
+[
+  {
+    "status": "error",
+    "message": "CMakeCache.txt 不存在，请先执行 cmake -B build 初始化构建目录",
+    "projectRoot": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project",
+    "buildDir": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build"
+  }
+]
+-- The C compiler identification is AppleClang 14.0.3.14030022
+-- The CXX compiler identification is AppleClang 14.0.3.14030022
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found GTest: /usr/local/lib/cmake/GTest/GTestConfig.cmake (found version "1.17.0")
+-- Configuring done (1.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build
+[
+  {
+    "status": "ready",
+    "target": "calculator_test",
+    "projectRoot": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project",
+    "buildDir": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build",
+    "dryRun": true,
+    "maxRounds": 0,
+    "whitelist": [
+      "tests/calculator_test.cpp",
+      "tests/CMakeLists.txt"
+    ]
+  },
+  {
+    "status": "pass",
+    "round": 0,
+    "currentFile": "#include <gtest/gtest.h>\n#include \"../src/calculator.h\"\n\nTEST(CalculatorTest, Add) {\n    Calculator calc;\n    EXPECT_EQ(calc.add(1, 2), 3);\n}\n\nTEST(CalculatorTest, Subtract) {\n    Calculator calc;\n    EXPECT_EQ(calc.subtract(5, 3), 2);\n}\n",
+    "logFile": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/.devpilot/logs/compile-fix-2026-04-12T14-21-11-312Z.log",
+    "log": [
+      "[2026-04-12T14:21:11.313Z] prepare: test=tests/calculator_test.cpp target=calculator_test dryRun=true",
+      "[2026-04-12T14:21:11.313Z] prepare: whitelist=tests/calculator_test.cpp, tests/CMakeLists.txt",
+      "[2026-04-12T14:21:11.313Z] prepare: initial_hash=e280cad87cad09392fe2cca450149e5fdc99305a",
+      "[2026-04-12T14:21:11.314Z] build: round=0 cmd=cmake --build \"/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build\" --target \"calculator_test\"",
+      "[2026-04-12T14:21:12.806Z] build: pass",
+      "[2026-04-12T14:21:12.806Z] build_stdout:\n[ 33%] Building CXX object tests/CMakeFiles/calculator_test.dir/calculator_test.cpp.o\n[ 66%] Building CXX object tests/CMakeFiles/calculator_test.dir/__/src/calculator.cpp.o\n[100%] Linking CXX executable calculator_test\n[100%] Built target calculator_test\n"
+    ]
+  },
+  {
+    "status": "done",
+    "round": 0,
+    "logFile": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/.devpilot/logs/compile-fix-2026-04-12T14-21-11-312Z.log"
+  }
+]
+[
+  {
+    "status": "ready",
+    "target": "calculator_test",
+    "projectRoot": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project",
+    "buildDir": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build",
+    "dryRun": false,
+    "maxRounds": 3,
+    "whitelist": [
+      "tests/calculator_test.cpp",
+      "tests/CMakeLists.txt"
+    ]
+  },
+  {
+    "status": "fail",
+    "round": 0,
+    "errors": [],
+    "errorsRemaining": 0,
+    "currentFile": "#include <gtest/gtest.h>\n#include \"../src/nonexistent.h\"\n\nTEST(CalculatorTest, Add) {\n    Calculator calc;\n    EXPECT_EQ(calc.add(1, 2), 3);\n}\n",
+    "logFile": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/.devpilot/logs/compile-fix-2026-04-12T14-21-12-915Z.log",
+    "log": [
+      "[2026-04-12T14:21:12.916Z] prepare: test=tests/calculator_test.cpp target=calculator_test dryRun=false",
+      "[2026-04-12T14:21:12.916Z] prepare: whitelist=tests/calculator_test.cpp, tests/CMakeLists.txt",
+      "[2026-04-12T14:21:12.916Z] prepare: initial_hash=97480105189e878fa7eb3b662c2ea9d5301755f6",
+      "[2026-04-12T14:21:12.917Z] build: round=0 cmd=cmake --build \"/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build\" --target \"calculator_test\"",
+      "[2026-04-12T14:21:13.866Z] build: fail round=0 errors=0",
+      "[2026-04-12T14:21:13.866Z] build_stderr:\n[ 33%] Building CXX object tests/CMakeFiles/calculator_test.dir/calculator_test.cpp.o\n\n/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/tests/calculator_test.cpp:2:10: fatal error: '../src/nonexistent.h' file not found\n#include \"../src/nonexistent.h\"\n         ^~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\nmake[3]: *** [tests/CMakeFiles/calculator_test.dir/calculator_test.cpp.o] Error 1\nmake[2]: *** [tests/CMakeFiles/calculator_test.dir/all] Error 2\nmake[1]: *** [tests/CMakeFiles/calculator_test.dir/rule] Error 2\nmake: *** [calculator_test] Error 2\n"
+    ],
+    "stderr": "[ 33%] Building CXX object tests/CMakeFiles/calculator_test.dir/calculator_test.cpp.o\n\n/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/tests/calculator_test.cpp:2:10: fatal error: '../src/nonexistent.h' file not found\n#include \"../src/nonexistent.h\"\n         ^~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\nmake[3]: *** [tests/CMakeFiles/calculator_test.dir/calculator_test.cpp.o] Error 1\nmake[2]: *** [tests/CMakeFiles/calculator_test.dir/all] Error 2\nmake[1]: *** [tests/CMakeFiles/calculator_test.dir/rule] Error 2\nmake: *** [calculator_test] Error 2\n"
+  },
+  {
+    "status": "rolled_back",
+    "logFile": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/.devpilot/logs/compile-fix-2026-04-12T14-21-12-915Z.log"
+  }
+]
+[
+  {
+    "status": "ready",
+    "target": "calculator_test",
+    "projectRoot": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project",
+    "buildDir": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build",
+    "dryRun": false,
+    "maxRounds": 3,
+    "whitelist": [
+      "tests/calculator_test.cpp",
+      "tests/CMakeLists.txt"
+    ]
+  },
+  {
+    "status": "rejected",
+    "reason": "patchFile 超出白名单"
+  },
+  {
+    "status": "done",
+    "round": 0,
+    "logFile": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/.devpilot/logs/compile-fix-2026-04-12T14-21-13-965Z.log"
+  }
+]
+[
+  {
+    "status": "ready",
+    "target": "calculator_test",
+    "projectRoot": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project",
+    "buildDir": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build",
+    "dryRun": false,
+    "maxRounds": 3,
+    "whitelist": [
+      "tests/calculator_test.cpp",
+      "tests/CMakeLists.txt"
+    ]
+  },
+  {
+    "status": "rejected",
+    "reason": "CMakeLists.txt 仅允许纯追加修改"
+  },
+  {
+    "status": "done",
+    "round": 0,
+    "logFile": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/.devpilot/logs/compile-fix-2026-04-12T14-21-14-047Z.log"
+  }
+]
