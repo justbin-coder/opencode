@@ -159,14 +159,7 @@ export function DialogModel(props: { providerID?: string }) {
     <DialogSelect<ReturnType<typeof options>[number]["value"]>
       options={options()}
       keybind={[
-        {
-          keybind: keybind.all.model_provider_list?.[0],
-          title: connected() ? "Connect provider" : "View all providers",
-          hidden: true, // CUSTOM: DevPilot lockdown
-          onTrigger() {
-            dialog.replace(() => <DialogProvider />)
-          },
-        },
+        // CUSTOM: DevPilot lockdown — provider list entry removed
         {
           keybind: keybind.all.model_favorite_toggle?.[0],
           title: "Favorite",
