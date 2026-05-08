@@ -1,5 +1,5 @@
 ---
-name: req-structuring
+name: req-card-gen
 description: 将自然语言需求转换为结构化需求卡片，并在需要时写入 .opencode/requirements。
 ---
 

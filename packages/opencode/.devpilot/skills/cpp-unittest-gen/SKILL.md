@@ -1,5 +1,5 @@
 ---
-name: cpp-test-gen
+name: cpp-unittest-gen
 description: 将 C++ 源代码转换为自动生成的单元测试代码，支持 gtest 与 CppUnit、样板学习、增量追加与三类场景覆盖。
 ---
 
@@ -1088,7 +1088,7 @@ CPPUNIT_ASSERT(false);  // 立即失败测试
 ## 使用场景总结
 
 ```
-用户执行：/gen-test src/calculator.cpp --framework gtest --template tests/samples/sample_test.cpp
+用户执行：/cpp-unittest-gen src/calculator.cpp --framework gtest --template tests/samples/sample_test.cpp
 
 流程：
 1. 读取 calculator.cpp

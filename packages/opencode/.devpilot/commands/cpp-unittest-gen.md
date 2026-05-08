@@ -1,4 +1,4 @@
-# /gen-test 命令
+# /cpp-unittest-gen 命令
 
 > **命令用途：** 从 C++ 源文件自动生成单元测试代码（支持 gtest 和 CppUnit 框架）
 
@@ -6,7 +6,7 @@
 
 ## 命令概述
 
-`/gen-test` 是一个端到端的 C++ 单元测试生成命令，用于自动化生成满足「三类场景覆盖」（正常路径、边界值、异常处理）的测试用例。通过与 [cpp-test-gen SKILL](../skills/cpp-test-gen/SKILL.md) 配合，支持框架选择、增量生成、样板学习等高级功能。
+`/cpp-unittest-gen` 是一个端到端的 C++ 单元测试生成命令，用于自动化生成满足「三类场景覆盖」（正常路径、边界值、异常处理）的测试用例。通过与 [cpp-unittest-gen SKILL](../skills/cpp-unittest-gen/SKILL.md) 配合，支持框架选择、增量生成、样板学习等高级功能。
 
 **关键特性：**
 - ✓ 自动函数签名解析和测试骨架生成
@@ -24,11 +24,11 @@
 ### 1. 最简单的调用：生成基础测试
 
 ```bash
-/gen-test src/calculator.cpp
+/cpp-unittest-gen src/calculator.cpp
 
 ✓ 读取源文件：src/calculator.cpp
 ✓ 分析函数：Add, Subtract, Multiply, Divide (4 个)
-✓ 加载 SKILL：cpp-test-gen
+✓ 加载 SKILL：cpp-unittest-gen
 ✓ 生成完成：src/calculator_test.cpp (180 行)
   └─ 包含: 12 个测试用例，覆盖率预期 ≥70%
   └─ 框架: gtest (默认)
@@ -39,7 +39,7 @@
 
 ```bash
 # 使用 CppUnit 框架
-/gen-test src/calculator.cpp --framework cppunit
+/cpp-unittest-gen src/calculator.cpp --framework cppunit
 
 ✓ 框架: CppUnit
 ✓ 生成完成：src/calculator_test.cpp (150 行)
@@ -51,7 +51,7 @@
 
 ```bash
 # 在现有测试文件基础上追加新的测试
-/gen-test src/calculator.cpp --append
+/cpp-unittest-gen src/calculator.cpp --append
 
 ✓ 已检测现有文件：src/calculator_test.cpp
 ✓ 最后测试位置：line 142 (testDivide_ByZero)
@@ -66,7 +66,7 @@
 
 ```bash
 # 从现有测试文件学习风格，应用于新生成的测试
-/gen-test src/math_helper.cpp --template tests/calculator_test.cpp
+/cpp-unittest-gen src/math_helper.cpp --template tests/calculator_test.cpp
 
 ✓ 样板学习：tests/calculator_test.cpp
 ✓ 识别特征：
@@ -83,7 +83,7 @@
 
 ```bash
 # 将生成的测试关联到特定的需求卡片（来自 E1 输出）
-/gen-test src/database.cpp --req REQ-2026-03-001
+/cpp-unittest-gen src/database.cpp --req REQ-2026-03-001
 
 ✓ 关联需求：REQ-2026-03-001
 ✓ 融合验收标准：
@@ -100,7 +100,7 @@
 
 ```bash
 # 指定测试文件输出路径
-/gen-test src/calculator.cpp --output tests/unit/calculator_test.cpp
+/cpp-unittest-gen src/calculator.cpp --output tests/unit/calculator_test.cpp
 
 ✓ 输出路径：tests/unit/calculator_test.cpp
 ✓ 生成完成：tests/unit/calculator_test.cpp (180 行)
@@ -110,7 +110,7 @@
 
 ```bash
 # 多个选项一起使用
-/gen-test src/utils.cpp \
+/cpp-unittest-gen src/utils.cpp \
   --framework cppunit \
   --template tests/calculator_test.cpp \
   --req REQ-2026-03-005 \
@@ -179,14 +179,14 @@
 
 ```
 if (framework === 'gtest') {
-  加载 SKILL：cpp-test-gen
+  加载 SKILL：cpp-unittest-gen
   使用配置：
     - 测试框架：gtest
     - Mock 框架：Google Mock (gmock)
     - 断言风格：EXPECT_* 优先
     - 参数化：TEST_P 支持
 } else if (framework === 'cppunit') {
-  加载 SKILL：cpp-test-gen (CppUnit 分支)
+  加载 SKILL：cpp-unittest-gen (CppUnit 分支)
   使用配置：
     - 测试框架：CppUnit
     - Mock 框架：第三方库或接口 mock
@@ -196,7 +196,7 @@ if (framework === 'gtest') {
 
 日志示例：
 [框架] 选定框架：gtest
-[SKILL] 加载 cpp-test-gen/SKILL.md
+[SKILL] 加载 cpp-unittest-gen/SKILL.md
 [SKILL] 使用配置：gtest + gmock
 [SKILL] 提示词注入：500 tokens (规范 + 示例)
 ```
@@ -278,7 +278,7 @@ if (framework === 'gtest') {
 ```
 提示词输入：
 - 解析得到的函数列表 (50 tokens)
-- cpp-test-gen SKILL 规范 (500 tokens)
+- cpp-unittest-gen SKILL 规范 (500 tokens)
 - 样板特征 (可选, 100-200 tokens)
 - 需求验收标准 (可选, 100-200 tokens)
 - 生成指示：三类场景覆盖 + Mock 指南 + 中文注释
@@ -342,7 +342,7 @@ if (framework === 'gtest') {
 
 **命令：**
 ```bash
-/gen-test src/calculator.cpp \
+/cpp-unittest-gen src/calculator.cpp \
   --framework gtest \
   --template tests/sample_test.cpp \
   --output tests/calculator_test.cpp
@@ -352,7 +352,7 @@ if (framework === 'gtest') {
 
 ```
 ════════════════════════════════════════════════════════════════
- /gen-test 单元测试生成
+ /cpp-unittest-gen 单元测试生成
 ════════════════════════════════════════════════════════════════
 
 [Step 1] 输入验证
@@ -380,7 +380,7 @@ if (framework === 'gtest') {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✓ 框架：gtest (Google Test)
 ✓ Mock 框架：Google Mock (gmock)
-✓ 加载 SKILL：cpp-test-gen v1.0
+✓ 加载 SKILL：cpp-unittest-gen v1.0
 ✓ 提示词注入：~500 tokens
 
 [Step 4] 样板学习
@@ -469,7 +469,7 @@ g++ -std=c++17 -o tests/calculator_test \
 
 **A:** 使用 `--framework` 选项：
 ```bash
-/gen-test src/calculator.cpp --framework cppunit
+/cpp-unittest-gen src/calculator.cpp --framework cppunit
 ```
 
 或修改默认框架（在 opencode 配置中设置 `defaultTestFramework: cppunit`）。
@@ -532,7 +532,7 @@ genhtml coverage.info --output-directory coverage_html/
 
 启用编译验证：
 ```bash
-/gen-test src/calculator.cpp --validate
+/cpp-unittest-gen src/calculator.cpp --validate
 ```
 
 ### Q8: 生成耗时多少？
@@ -638,7 +638,7 @@ class MockObserver : public Observer {
 
 3. **查看生成日志**
    ```
-   cat .opencode/logs/gen-test-<timestamp>.log
+   cat .opencode/logs/cpp-unittest-gen-<timestamp>.log
    ```
 
 ### 集成到 CI/CD
@@ -650,7 +650,7 @@ class MockObserver : public Observer {
     find src -name "*.cpp" | while read file; do
       test_file="tests/$(basename "$file" .cpp)_test.cpp"
       if [ ! -f "$test_file" ]; then
-        /gen-test "$file"
+        /cpp-unittest-gen "$file"
       fi
     done
 
@@ -663,7 +663,7 @@ class MockObserver : public Observer {
 使用 `--req` 选项关联需求卡片：
 ```bash
 # 为需求卡片生成对应的测试
-/gen-test src/database.cpp --req REQ-2026-03-001
+/cpp-unittest-gen src/database.cpp --req REQ-2026-03-001
 ```
 
 生成的测试会：
@@ -676,7 +676,7 @@ class MockObserver : public Observer {
 生成的测试支持 E3 编译验证：
 ```bash
 # 生成测试后，立即运行编译验证
-/gen-test src/calculator.cpp
+/cpp-unittest-gen src/calculator.cpp
 /compile-fix src/calculator_test.cpp  # E3 命令
 ```
 
@@ -687,7 +687,7 @@ class MockObserver : public Observer {
 为保持代码风格一致，定期更新样板：
 ```bash
 # 从最近的高质量测试更新样板
-/gen-test src/new_feature.cpp \
+/cpp-unittest-gen src/new_feature.cpp \
   --template tests/latest_best_practice_test.cpp
 ```
 
@@ -712,22 +712,22 @@ class MockObserver : public Observer {
 
 ```bash
 # 基础生成
-/gen-test src/calculator.cpp
+/cpp-unittest-gen src/calculator.cpp
 
 # 指定框架
-/gen-test src/database.cpp --framework cppunit
+/cpp-unittest-gen src/database.cpp --framework cppunit
 
 # 增量追加
-/gen-test src/utils.cpp --append
+/cpp-unittest-gen src/utils.cpp --append
 
 # 学习风格
-/gen-test src/new_module.cpp --template tests/best_test.cpp
+/cpp-unittest-gen src/new_module.cpp --template tests/best_test.cpp
 
 # 关联需求
-/gen-test src/feature.cpp --req REQ-2026-03-005
+/cpp-unittest-gen src/feature.cpp --req REQ-2026-03-005
 
 # 完整选项
-/gen-test src/app.cpp \
+/cpp-unittest-gen src/app.cpp \
   --framework gtest \
   --output tests/app_test.cpp \
   --template tests/standard.cpp \
@@ -750,4 +750,4 @@ class MockObserver : public Observer {
 
 ---
 
-*最后更新：2026-03-31 · cpp-test-gen SKILL v1.0 配套命令文档*
+*最后更新：2026-03-31 · cpp-unittest-gen SKILL v1.0 配套命令文档*

@@ -1,6 +1,6 @@
 ---
 name: cpp-compile-fix
-description: 对开发者显式指定的 C++ 测试文件执行编译验证与自动修复。仅用于 `/verify-build` 或用户明确要求“编译验证/自动修复测试编译错误”的场景。必须通过 `cpp-compile-fix` 工具完成，禁止使用内建写文件工具。
+description: 对开发者显式指定的 C++ 测试文件执行编译验证与自动修复。仅用于 `/cpp-compile-fix` 或用户明确要求“编译验证/自动修复测试编译错误”的场景。必须通过 `cpp-compile-fix` 工具完成，禁止使用内建写文件工具。
 globs:
   - "tests/**/*_test.cpp"
   - "**/CMakeLists.txt"
@@ -9,7 +9,7 @@ globs:
 # C++ 编译验证与自动修复 Skill
 
 > **场景：** 开发者显式要求对 C++ 测试文件做编译验证，必要时自动修复
-> **输入：** `/verify-build <test_file> [--max-rounds N] [--dry-run]`
+> **输入：** `/cpp-compile-fix <test_file> [--max-rounds N] [--dry-run]`
 > **输出：** 每轮编译摘要 + 最终成功/失败结论 + 日志路径
 
 ---

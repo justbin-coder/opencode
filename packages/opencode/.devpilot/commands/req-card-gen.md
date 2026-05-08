@@ -2,7 +2,7 @@
 description: 将自然语言需求整理为结构化需求卡片
 ---
 
-使用 @.opencode/skills/req-structuring/SKILL.md 作为唯一规范来源，处理下面的请求参数：
+使用 @.opencode/skills/req-card-gen/SKILL.md 作为唯一规范来源，处理下面的请求参数：
 
 `$ARGUMENTS`
 

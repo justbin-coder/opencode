@@ -1,16 +1,16 @@
 ---
-name: verify-build
+name: cpp-compile-fix
 description: 编译验证并在白名单范围内自动修复指定的 C++ 测试文件
 ---
 
 ## 命令说明
 
-`/verify-build` 对指定测试文件执行一次独立的编译验证流程。命令只负责组织参数和加载 `cpp-compile-fix` Skill；实际构建、修复、回滚、日志写入全部由 `cpp-compile-fix` 工具完成。
+`/cpp-compile-fix` 对指定测试文件执行一次独立的编译验证流程。命令只负责组织参数和加载 `cpp-compile-fix` Skill；实际构建、修复、回滚、日志写入全部由 `cpp-compile-fix` 工具完成。
 
 **用法：**
 
 ```bash
-/verify-build <test_file> [--max-rounds N] [--dry-run]
+/cpp-compile-fix <test_file> [--max-rounds N] [--dry-run]
 ```
 
 **参数：**
