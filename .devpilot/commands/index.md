@@ -3,27 +3,37 @@ name: index
 description: 为指定 C++ 代码库构建离线语义索引，支持后续需求-代码关联检索
 ---
 
-# /index 命令
+## 命令说明
 
-用户输入 `/index <代码库路径>` 时，执行以下操作：
+`/index` 为指定的 C++ 代码库构建离线语义索引（Embedding），构建完成后可通过 `cpp-code-search` 工具进行需求-代码关联检索。
 
-## 执行步骤
+**用法：** `/index <C++代码库路径>`
 
-1. 从 `$ARGUMENTS` 提取代码库路径（若未提供，询问用户）
-2. 验证路径存在（若不存在，立即报错，不执行构建）
-3. 调用 BashTool 执行索引构建，**必须传入 timeout: 600000**（10 分钟）：
+**示例：**
+```
+/index /path/to/my-cpp-project
+```
+
+**前置条件：** 需要可用的 Embedding API 服务（OpenAI-compatible `/v1/embeddings` 端点）。
+- devpilot 默认从 `~/.config/devpilot/devpilot.json` 中读取 provider 配置
+- 也可通过环境变量覆盖：`EMBEDDING_API_URL`、`EMBEDDING_API_KEY`、`EMBEDDING_MODEL`
+
+---
+
+## 执行逻辑
+
+如果 `$ARGUMENTS` 为空，向用户展示上述用法说明，**不执行任何命令**，等待用户提供路径后再执行。
+
+如果 `$ARGUMENTS` 非空：
+
+1. 先向用户说明即将执行的操作：为 `$ARGUMENTS` 构建语义索引，索引将写入 `$ARGUMENTS/.opencode-index/`，预计耗时数分钟。
+2. 验证路径存在后，使用 BashTool 执行：
    ```
-   devpilot index <代码库路径>
+   devpilot index $ARGUMENTS
    ```
-4. 实时展示 BashTool 输出的进度（5 个阶段：扫描→解析→BM25→Embedding→HNSW）
-5. 构建完成后，告知用户：
-   - 索引位置：`<代码库路径>/.opencode-index/`
-   - 文件数和代码单元数（从 BashTool 输出解析）
-   - 下一步：在该目录启动 devpilot 后可直接使用需求检索
-
-## 注意事项
-
-- 首次运行会下载 Embedding 模型（~90MB），需要网络，之后离线可用
-- 大型项目（>10 万行）构建时间可能超过 5 分钟，请耐心等待
-- 若路径不存在，立即提示错误，不要执行构建
-- BashTool 的 timeout 参数**必须设置为 600000**（毫秒），否则默认 2 分钟会超时
+   **必须设置 timeout: 600000**（10 分钟，索引构建耗时较长）。
+3. 构建完成后，报告：
+   - 索引写入位置：`$ARGUMENTS/.opencode-index/`
+   - 扫描的文件数和提取的代码单元数
+4. 如果路径不存在，报错提示，不执行构建。
+5. 如果 Embedding API 报错（如模型不存在、服务不可达），提示用户检查 Embedding 配置。

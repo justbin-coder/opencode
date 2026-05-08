@@ -4,13 +4,23 @@
  * 输入：E1 结构化需求卡片（JSON）
  * 输出：Top-5 相关代码单元（文件路径、类名、函数名、关联度分数、等级标签）
  *
- * 前置条件：必须先运行 `bun run index <代码库路径>` 构建索引
+ * 前置条件：必须先在 devpilot TUI 中运行 `/index <C++代码库路径>` 构建索引。
+ *
+ * 离线交付约束（CUSTOM）：
+ *   本文件不得 import 任何外部 npm 包（包括 @opencode-ai/plugin、zod），
+ *   因为离线客户侧 ~/.devpilot/ 下没有 node_modules，devpilot 二进制也不会
+ *   把 bundled 依赖暴露给用户工具的动态 import 解析路径。
+ *   —— args 通过 factory `(z) => shape` 拿到 opencode 内嵌的 zod。
+ *   —— tool() 直接内联成 identity helper。
  */
-import { tool } from "@opencode-ai/plugin"
-import { z } from "zod"
+
 import { spawnSync } from "child_process"
 import { existsSync, readFileSync } from "fs"
 import path from "path"
+
+// CUSTOM: 内联 identity helper，替代 @opencode-ai/plugin 的 tool()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const tool = <T>(def: T): T => def
 
 interface IndexMetadata {
   code_root: string
@@ -42,6 +52,16 @@ function checkIndex(): { ok: boolean; error?: string; meta?: IndexMetadata } {
   return { ok: true, meta }
 }
 
+// 用户工具回调参数类型（运行时由 opencode 内部的 zod schema 校验后传入）
+interface CppSearchArgs {
+  requirement: {
+    id: string
+    description: string
+    acceptance_criteria?: string[]
+  }
+  top_k: number
+}
+
 export default tool({
   description: `搜索与 C++ 代码库相关的需求-代码关联信息。
 
@@ -52,9 +72,11 @@ export default tool({
 - 用户输入需求卡片，需要找到对应的 C++ 实现代码
 - 需要了解某个功能由哪些类/函数实现
 
-注意：索引必须提前构建（运行 bun run index <代码库路径>），否则返回错误提示。`,
+注意：索引必须提前通过 devpilot TUI 的 /index <代码库路径> 构建，否则返回错误提示。`,
 
-  args: {
+  // CUSTOM: args 使用 factory 形式，避免 import zod；z 由 opencode 注入
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  args: (z: any) => ({
     requirement: z
       .object({
         id: z.string().describe("需求卡片 ID，如 REQ-01"),
@@ -63,9 +85,9 @@ export default tool({
       })
       .describe("E1 结构化需求卡片"),
     top_k: z.number().int().min(1).max(10).default(5).describe("返回结果数量，默认 5"),
-  },
+  }),
 
-  execute: async (args) => {
+  execute: async (args: CppSearchArgs) => {
     // 1. 检查索引元信息
     const check = checkIndex()
     if (!check.ok) {
@@ -74,10 +96,7 @@ export default tool({
     const meta = check.meta!
 
     // 2. 拼接查询文本
-    const queryText = [
-      args.requirement.description,
-      ...(args.requirement.acceptance_criteria ?? []),
-    ].join(" ")
+    const queryText = [args.requirement.description, ...(args.requirement.acceptance_criteria ?? [])].join(" ")
 
     // 3. 通过 process.execPath 调用自身 index --search 子命令
     //    process.execPath 在 Bun compiled binary 中指向 devpilot binary 本身
@@ -85,7 +104,7 @@ export default tool({
       process.execPath,
       [
         "index",
-        "_",  // <path> positional arg（search 模式下忽略实际值）
+        "_", // <path> positional arg（search 模式下忽略实际值）
         "--search",
         `--index-dir=${INDEX_DIR}`,
         `--query=${queryText}`,
@@ -100,10 +119,8 @@ export default tool({
       })
     }
 
-    const searchResult: { index_info: any; results: any[] } = JSON.parse(result.stdout)
-    const indexAge = Math.round(
-      (Date.now() - new Date(meta.built_at).getTime()) / 1000 / 60,
-    )
+    const searchResult: { index_info: unknown; results: Array<Record<string, unknown>> } = JSON.parse(result.stdout)
+    const indexAge = Math.round((Date.now() - new Date(meta.built_at).getTime()) / 1000 / 60)
 
     // 4. 格式化输出（JSON + Markdown 双格式）
     const mdTable = [
@@ -115,7 +132,7 @@ export default tool({
       "| # | 文件 | 类 | 函数 | 关联度 | 等级 |",
       "|---|------|----|------|--------|------|",
       ...searchResult.results.map(
-        (r: any) =>
+        (r) =>
           `| ${r.rank} | \`${r.file}\` | ${r.class ?? "-"} | \`${r.function ?? "-"}\` | ${r.score} | **${r.label}** |`,
       ),
     ].join("\n")

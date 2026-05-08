@@ -1,0 +1,7 @@
+{
+  "cpp": {
+    "projectRoot": "/path/to/your/cpp-project",
+    "buildDir": "build",
+    "testTargetDiscovery": "auto"
+  }
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "status": "ready",
+    "target": "calculator_test",
+    "projectRoot": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project",
+    "buildDir": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/build",
+    "dryRun": false,
+    "maxRounds": 3,
+    "whitelist": [
+      "tests/calculator_test.cpp",
+      "tests/CMakeLists.txt"
+    ]
+  },
+  {
+    "status": "rejected",
+    "reason": "CMakeLists.txt 仅允许纯追加修改"
+  },
+  {
+    "status": "done",
+    "round": 0,
+    "logFile": "/Users/justbin/project/opensource/opencode/.devpilot/tests/e3_test_project/.devpilot/logs/compile-fix-2026-04-12T14-21-14-047Z.log"
+  }
+]

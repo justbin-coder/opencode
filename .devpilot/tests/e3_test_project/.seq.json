@@ -1,0 +1,14 @@
+[
+  {
+    "action": "prepare",
+    "testFile": "tests/calculator_test.cpp"
+  },
+  {
+    "action": "apply",
+    "patchFile": "tests/CMakeLists.txt",
+    "patch": "@@ -1,2 +1,1 @@\n-find_package(GTest REQUIRED)\n add_executable(calculator_test calculator_test.cpp ../src/calculator.cpp)"
+  },
+  {
+    "action": "finish"
+  }
+]
