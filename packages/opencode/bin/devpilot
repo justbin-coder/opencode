@@ -63,7 +63,8 @@ let arch = archMap[os.arch()]
 if (!arch) {
   arch = os.arch()
 }
-const base = "devpilot-" + platform + "-" + arch
+// CUSTOM: DevPilot rebrand — 包名与 build.ts 中 pkg.name (devpilot-ai) 保持一致
+const base = "devpilot-ai-" + platform + "-" + arch
 // CUSTOM: DevPilot rebrand — 平台二进制文件名
 const binary = platform === "windows" ? "devpilot.exe" : "devpilot"
 

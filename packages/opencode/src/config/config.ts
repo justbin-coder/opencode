@@ -179,6 +179,13 @@ export namespace Config {
   }
 
   export async function needsInstall(dir: string) {
+    // CUSTOM: DevPilot 离线交付 — 目录存在 .devpilot-offline 标记文件时完全跳过依赖安装
+    // 用于客户侧内网部署：工具文件不依赖 @opencode-ai/plugin，也不需要 bun install
+    if (existsSync(path.join(dir, ".devpilot-offline"))) {
+      log.debug("devpilot offline marker present, skipping dependency install", { dir })
+      return false
+    }
+
     // Some config dirs may be read-only.
     // Installing deps there will fail; skip installation in that case.
     const writable = await isWritable(dir)

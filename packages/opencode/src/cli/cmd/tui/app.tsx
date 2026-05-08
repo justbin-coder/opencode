@@ -556,6 +556,8 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       value: "agent.list",
       keybind: "agent_list",
       category: "Agent",
+      // CUSTOM: DevPilot lockdown — Agent 切换不在 R01-R09 交付范围
+      hidden: true,
       slash: {
         name: "agents",
       },
@@ -567,6 +569,8 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       title: "Toggle MCPs",
       value: "mcp.list",
       category: "Agent",
+      // CUSTOM: DevPilot lockdown — MCP 管理不在 R01-R09 交付范围
+      hidden: true,
       slash: {
         name: "mcps",
       },

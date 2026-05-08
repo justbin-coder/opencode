@@ -149,7 +149,7 @@ function chunk(node: NodeLike, source: string, lines: string[], file: string, cl
     id: createHash("sha256")
       .update(`${file}:${cls ?? ""}:${fn ?? ""}:${signature}`)
       .digest("hex")
-      .slice(0, 8),
+      .slice(0, 16),
     file,
     class: cls,
     function: fn,

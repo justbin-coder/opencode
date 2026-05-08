@@ -68,10 +68,11 @@ function View(props: { api: TuiPluginApi }) {
         <span style={{ fg: theme().textMuted }}>{path().parent}/</span>
         <span style={{ fg: theme().text }}>{path().name}</span>
       </text>
+      {/* CUSTOM: DevPilot rebrand — 将 OpenCode 品牌替换为 Brand.name */}
       <text fg={theme().textMuted}>
-        <span style={{ fg: theme().success }}>•</span> <b>Open</b>
+        <span style={{ fg: theme().success }}>•</span>{" "}
         <span style={{ fg: theme().text }}>
-          <b>Code</b>
+          <b>{Brand.name}</b>
         </span>{" "}
         <span>{props.api.app.version}</span>
       </text>

@@ -6,6 +6,8 @@ import { NamedError } from "@opencode-ai/util/error"
 import { Filesystem } from "@/util/filesystem"
 import { Flag } from "@/flag/flag"
 import { Global } from "@/global"
+// CUSTOM: DevPilot rebrand — 项目/家目录配置子目录名由 Brand.config 统一决定
+import { Brand } from "@/brand"
 
 export namespace ConfigPaths {
   export async function projectFiles(name: string, directory: string, worktree: string) {
@@ -25,7 +27,8 @@ export namespace ConfigPaths {
       ...(!Flag.OPENCODE_DISABLE_PROJECT_CONFIG
         ? await Array.fromAsync(
             Filesystem.up({
-              targets: [".opencode"],
+              // CUSTOM: DevPilot rebrand — 项目级配置目录改为 .devpilot
+              targets: [`.${Brand.config}`],
               start: directory,
               stop: worktree,
             }),
@@ -33,7 +36,8 @@ export namespace ConfigPaths {
         : []),
       ...(await Array.fromAsync(
         Filesystem.up({
-          targets: [".opencode"],
+          // CUSTOM: DevPilot rebrand — 家目录全局配置目录改为 ~/.devpilot
+          targets: [`.${Brand.config}`],
           start: Global.Path.home,
           stop: Global.Path.home,
         }),

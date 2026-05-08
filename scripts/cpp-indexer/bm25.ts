@@ -39,10 +39,15 @@ export class Bm25Index {
    * search_text = 文件路径 + 类名 + 函数名 + 签名 + 注释（拼接供 FTS5 索引）
    */
   insertBatch(chunks: CodeChunk[]) {
-    const chunk = this.db.prepare("INSERT OR REPLACE INTO chunks (id, data) VALUES (?, ?)")
-    const fts = this.db.prepare("INSERT INTO chunks_fts (rowid, id, search_text) VALUES ((SELECT rowid FROM chunks_fts WHERE id = ?), ?, ?)")
+    const chunkStmt = this.db.prepare("INSERT OR REPLACE INTO chunks (id, data) VALUES (?, ?)")
+    // FTS5 不需要手动指定 rowid，让 SQLite 自动分配
+    const ftsStmt = this.db.prepare("INSERT INTO chunks_fts (id, search_text) VALUES (?, ?)")
+    const ftsDeleteStmt = this.db.prepare("DELETE FROM chunks_fts WHERE id = ?")
+    const seen = new Set<string>()
     const all = this.db.transaction((items: CodeChunk[]) => {
       items.forEach((c) => {
+        if (seen.has(c.id)) return
+        seen.add(c.id)
         const text = [
           c.file,
           c.class ?? "",
@@ -51,8 +56,9 @@ export class Bm25Index {
           c.doc_comment,
           c.body_snippet.slice(0, 200),
         ].join(" ")
-        chunk.run(c.id, JSON.stringify(c))
-        fts.run(c.id, c.id, text)
+        chunkStmt.run(c.id, JSON.stringify(c))
+        ftsDeleteStmt.run(c.id)
+        ftsStmt.run(c.id, text)
       })
     })
     all(chunks)

@@ -62,10 +62,24 @@ export namespace ToolRegistry {
           const custom: Tool.Info[] = []
 
           function fromPlugin(id: string, def: ToolDefinition): Tool.Info {
+            // CUSTOM: DevPilot 离线交付 — 支持 args 作为 factory 函数，内部 zod 注入给用户工具
+            // 客户侧工具文件无法 resolve bundled zod，因此提供 (z) => shape 的工厂形式
+            const resolveArgs = (): Record<string, z.ZodType> => {
+              const raw = (def as { args: unknown }).args
+              if (typeof raw === "function") {
+                try {
+                  return (raw as (z: unknown) => Record<string, z.ZodType>)(z)
+                } catch (err) {
+                  log.error("tool args factory threw", { id, err })
+                  return {}
+                }
+              }
+              return raw as Record<string, z.ZodType>
+            }
             return {
               id,
               init: async (initCtx) => ({
-                parameters: z.object(def.args),
+                parameters: z.object(resolveArgs()),
                 description: def.description,
                 execute: async (args, toolCtx) => {
                   const pluginCtx = {
@@ -85,6 +99,19 @@ export namespace ToolRegistry {
             }
           }
 
+          // CUSTOM: DevPilot 离线交付 — 判断一个模块导出是否长得像 ToolDefinition
+          // 排除纯辅助库（比如只 export class/function 的文件）误被注册成工具
+          function isToolDefinitionLike(value: unknown): value is ToolDefinition {
+            if (!value || typeof value !== "object") return false
+            const obj = value as Record<string, unknown>
+            if (typeof obj.execute !== "function") return false
+            if (typeof obj.description !== "string") return false
+            // args 可以是 object（ZodRawShape）或 factory 函数
+            if (obj.args == null) return false
+            if (typeof obj.args !== "object" && typeof obj.args !== "function") return false
+            return true
+          }
+
           const dirs = yield* config.directories()
           const matches = dirs.flatMap((dir) =>
             Glob.scanSync("{tool,tools}/*.{js,ts}", { cwd: dir, absolute: true, dot: true, symlink: true }),
@@ -92,10 +119,26 @@ export namespace ToolRegistry {
           if (matches.length) yield* config.waitForDependencies()
           for (const match of matches) {
             const namespace = path.basename(match, path.extname(match))
-            const mod = yield* Effect.promise(
-              () => import(process.platform === "win32" ? match : pathToFileURL(match).href),
-            )
-            for (const [id, def] of Object.entries<ToolDefinition>(mod)) {
+            // CUSTOM: DevPilot 离线交付 — 单个工具文件 import 失败不应打爆整个工具注册流程
+            const mod = yield* Effect.promise(async () => {
+              try {
+                return (await import(
+                  process.platform === "win32" ? match : pathToFileURL(match).href
+                )) as Record<string, unknown>
+              } catch (err) {
+                log.error("failed to load custom tool file, skipping", {
+                  file: match,
+                  error: err instanceof Error ? err.message : String(err),
+                })
+                return null
+              }
+            })
+            if (!mod) continue
+            for (const [id, def] of Object.entries(mod)) {
+              if (!isToolDefinitionLike(def)) {
+                log.debug("skipping non-tool export", { file: match, export: id })
+                continue
+              }
               custom.push(fromPlugin(id === "default" ? namespace : `${namespace}_${id}`, def))
             }
           }

@@ -1,11 +1,14 @@
 /**
  * C++ 代码库离线索引构建 CLI
- * 用法：bun run index <代码库路径> [--model=MINILM|BGE_M3]
+ * 用法：devpilot index <代码库路径>
  *
- * 输出目录：<当前项目>/.opencode-index/
+ * Embedding 通过 HTTP 调用 OpenAI-compatible /v1/embeddings API，
+ * API 配置从 ~/.config/devpilot/devpilot.json 读取。
+ *
+ * 输出目录：<代码库路径>/.opencode-index/
  *   metadata.json   索引元信息
  *   bm25.db         SQLite FTS5 索引
- *   vectors.bin     HNSW 向量索引
+ *   vectors.bin     向量索引（��� JS 格式）
  *   vectors.idmap   向量 id 映射
  *   chunks.jsonl    代码单元元数据
  */
@@ -14,7 +17,7 @@ import { writeFileSync, existsSync, mkdirSync, appendFileSync } from "fs"
 import path from "path"
 import { parseFile } from "./parser"
 import { Bm25Index } from "./bm25"
-import { initEmbedder, embedBatch, chunkToEmbedText, type ModelName } from "./embedder"
+import { initEmbedder, embedBatch, chunkToEmbedText } from "./embedder"
 import { VectorStore } from "./vector-store"
 import type { CodeChunk, IndexMetadata } from "./types"
 
@@ -39,8 +42,6 @@ async function collectCppFiles(rootDir: string): Promise<string[]> {
 }
 
 export async function buildMain(codeRoot: string) {
-  const modelName: ModelName = "MINILM"
-
   const codeRootAbs = path.resolve(codeRoot)
   if (!existsSync(codeRootAbs)) {
     console.error(`代码库路径不存在: ${codeRootAbs}`)
@@ -86,8 +87,8 @@ export async function buildMain(codeRoot: string) {
   bm25.close()
   console.log("    BM25 索引完成")
 
-  console.log("[4/5] 生成 Embedding 向量（首次运行会下载模型）...")
-  const modelId = await initEmbedder(modelName)
+  console.log("[4/5] 生成 Embedding 向量（调用 Embedding API）...")
+  const modelId = await initEmbedder()
   const texts = allChunks.map(chunkToEmbedText)
   const vectors = await embedBatch(texts, (cur, total) => {
     if (cur % 100 === 0 || cur === total) process.stdout.write(`\r    向量化进度: ${cur}/${total}`)

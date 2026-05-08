@@ -1,3 +1,8 @@
+---
+name: cpp-test-gen
+description: 将 C++ 源代码转换为自动生成的单元测试代码，支持 gtest/CppUnit 框架，覆盖率 ≥70%。
+---
+
 # C++ 单元测试生成 Skill
 
 > **场景：** 将 C++ 源代码转换为自动生成的单元测试代码

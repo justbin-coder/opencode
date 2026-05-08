@@ -92,16 +92,17 @@ export namespace Command {
           },
           hints: hints(PROMPT_INITIALIZE),
         }
-        commands[Default.REVIEW] = {
-          name: Default.REVIEW,
-          description: "review changes [commit|branch|pr], defaults to uncommitted",
-          source: "command",
-          get template() {
-            return PROMPT_REVIEW.replace("${path}", ctx.worktree)
-          },
-          subtask: true,
-          hints: hints(PROMPT_REVIEW),
-        }
+        // CUSTOM: DevPilot lockdown — code review 不在 R01-R09 交付范围，客户无此使用场景
+        // commands[Default.REVIEW] = {
+        //   name: Default.REVIEW,
+        //   description: "review changes [commit|branch|pr], defaults to uncommitted",
+        //   source: "command",
+        //   get template() {
+        //     return PROMPT_REVIEW.replace("${path}", ctx.worktree)
+        //   },
+        //   subtask: true,
+        //   hints: hints(PROMPT_REVIEW),
+        // }
 
         for (const [name, command] of Object.entries(cfg.command ?? {})) {
           commands[name] = {

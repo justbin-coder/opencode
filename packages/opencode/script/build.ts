@@ -208,14 +208,32 @@ for (const item of targets) {
   await Bun.build({
     conditions: ["browser"],
     tsconfig: "./tsconfig.json",
-    plugins: [plugin],
+    plugins: [
+      plugin,
+      // CUSTOM: DevPilot — sharp 是 @xenova/transformers 的可选图片依赖（图片预处理），
+      // embedding 场景只做文本→向量不需要它。用空 shim 替代，避免 native addon 打包/运行时报错
+      {
+        name: "sharp-shim",
+        setup(build) {
+          build.onResolve({ filter: /^sharp$/ }, () => ({
+            path: "sharp",
+            namespace: "sharp-shim",
+          }))
+          build.onLoad({ filter: /.*/, namespace: "sharp-shim" }, () => ({
+            contents: "export default null;",
+            loader: "js",
+          }))
+        },
+      },
+    ],
     compile: {
       autoloadBunfig: false,
       autoloadDotenv: false,
       autoloadTsconfig: true,
       autoloadPackageJson: true,
       target: name.replace(pkg.name, "bun") as any,
-      outfile: `dist/${name}/bin/opencode`,
+      // CUSTOM: DevPilot rebrand — 输出二进制文件名改为 devpilot（与 bin/devpilot wrapper 查找路径一致）
+      outfile: `dist/${name}/bin/${item.os === "win32" ? "devpilot.exe" : "devpilot"}`,
       execArgv: [`--user-agent=opencode/${Script.version}`, "--use-system-ca", "--"],
       windows: {},
     },
@@ -235,7 +253,8 @@ for (const item of targets) {
 
   // Smoke test: only run if binary is for current platform
   if (item.os === process.platform && item.arch === process.arch && !item.abi) {
-    const binaryPath = `dist/${name}/bin/opencode`
+    // CUSTOM: DevPilot rebrand — smoke test 路径与 outfile 保持一致
+    const binaryPath = `dist/${name}/bin/${item.os === "win32" ? "devpilot.exe" : "devpilot"}`
     console.log(`Running smoke test: ${binaryPath} --version`)
     try {
       const versionOutput = await $`${binaryPath} --version`.text()

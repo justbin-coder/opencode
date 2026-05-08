@@ -13,6 +13,8 @@ import { useArgs } from "./args"
 import { useSDK } from "./sdk"
 import { RGBA } from "@opentui/core"
 import { Filesystem } from "@/util/filesystem"
+// CUSTOM: DevPilot rebrand — 用于 provider 显示名覆盖
+import { Brand } from "@/brand"
 
 export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
   name: "Local",
@@ -224,7 +226,8 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           const provider = sync.data.provider.find((x) => x.id === value.providerID)
           const info = provider?.models[value.modelID]
           return {
-            provider: provider?.name ?? value.providerID,
+            // CUSTOM: DevPilot rebrand — 用 Brand.providerDisplayName 覆盖上游 provider 名
+            provider: provider ? Brand.providerDisplayName(provider.id, provider.name) : value.providerID,
             model: info?.name ?? value.modelID,
             reasoning: info?.capabilities?.reasoning ?? false,
           }

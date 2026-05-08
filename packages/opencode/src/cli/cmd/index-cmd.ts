@@ -1,15 +1,13 @@
 // CUSTOM: DevPilot — C++ 代码库索引构建子命令
-// 用法（build 模式）：devpilot index <代码库路径> [--model=MINILM|BGE_M3]
+// 用法（build 模式）：devpilot index <代码库路径>
 // 用法（search 模式）：devpilot index <ignored> --search --index-dir=<dir> --query=<text> [--top-k=5]
-// build 模式：由 /index TUI 命令通过 BashTool 调用，也可直接在终端使用
-// search 模式：由 cpp-code-search.ts 通过 spawnSync(process.execPath) 调用
+// Embedding 通过 HTTP 调用 /v1/embeddings API（零 native 依赖）
 import { cmd } from "./cmd"
 
 export const IndexCommand = cmd<
   {},
   {
     path: string
-    model?: string
     search?: boolean
     "index-dir"?: string
     query?: string
@@ -24,11 +22,6 @@ export const IndexCommand = cmd<
         type: "string",
         demandOption: true,
         describe: "C++ 代码库根目录",
-      })
-      .option("model", {
-        type: "string",
-        default: "MINILM",
-        describe: "Embedding 模型（MINILM|BGE_M3）",
       })
       // 以下选项仅供 cpp-code-search.ts 内部调用，隐藏不展示给用户
       .option("search", { type: "boolean", hidden: true })

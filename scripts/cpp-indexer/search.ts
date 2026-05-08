@@ -34,7 +34,7 @@ export async function searchMain({
     .map((l) => JSON.parse(l))
 
   const bm25 = new Bm25Index(path.join(indexDir, "bm25.db"))
-  const modelId = await initEmbedder("MINILM")
+  const modelId = await initEmbedder()
   const store = new VectorStore(modelId)
   store.load(path.join(indexDir, "vectors.bin"), path.join(indexDir, "vectors.idmap"))
 
