@@ -31,3 +31,11 @@ logs/
 tsconfig.tsbuildinfo
 # C++ 代码检索索引（离线构建产物，不提交）
 .opencode-index/
+
+# HD 项目本地产物
+.bun-tmp/
+oss-adapter/
+oss-adapterbak/
+docs-bak/
+ai-sdk-updates.md
+.devpilot/tests/e3_test_project/build/
