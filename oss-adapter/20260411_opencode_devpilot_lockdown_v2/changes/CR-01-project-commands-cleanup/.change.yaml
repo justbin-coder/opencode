@@ -1,0 +1,42 @@
+cr_id: CR-01
+slug: project-commands-cleanup
+status: completed
+type: discovery_fix
+priority: P1
+related_reqs: []
+related_epic: E5
+base_spec: specs/E5-lockdown-v2-design.md
+discovered_at: "2026-04-11"
+implemented_at: "2026-04-11"
+implemented_by: manual_verification
+author: justbin-coder
+
+summary: >
+  E5 审计遗漏：`.opencode/command/`（单数）目录中存在 7 个非交付开发命令，
+  在 DevPilot 命令面板中可见。根因是 config.ts `loadCommand()` 同时扫描
+  `{command,commands}/**/*.md`，E5 spec 只审计了 `commands/`（复数）路径。
+  修复方式：删除 .opencode/command/ 下全部 7 个非交付命令文件，不引入代码改动。
+
+affected_files:
+  - path: ".opencode/command/ai-deps.md"
+    action: deleted
+  - path: ".opencode/command/changelog.md"
+    action: deleted
+  - path: ".opencode/command/commit.md"
+    action: deleted
+  - path: ".opencode/command/issues.md"
+    action: deleted
+  - path: ".opencode/command/learn.md"
+    action: deleted
+  - path: ".opencode/command/rmslop.md"
+    action: deleted
+  - path: ".opencode/command/spellcheck.md"
+    action: deleted
+
+unaffected:
+  - ".opencode/commands/gen-test.md"      # 交付命令，保留
+  - ".opencode/commands/structurize-req.md"  # 交付命令，保留
+
+upgrade_note: >
+  升级 opencode 版本时，若有新版本将命令文件放入 .opencode/command/（单数）目录，
+  需再次审查并清理非交付命令文件。

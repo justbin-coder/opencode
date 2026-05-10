@@ -1,0 +1,12 @@
+cr_id: CR-1
+slug: external-skill-lockdown
+status: draft
+created_at: "2026-04-11"
+related_reqs: []
+related_epic: E4-feature-lockdown
+base_spec: specs/E4-feature-lockdown-design.md
+change_type: additive
+estimated_effort: "0.5h"
+files_changed:
+  - packages/opencode/bin/devpilot
+upstream_conflict_risk: none

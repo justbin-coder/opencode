@@ -1,0 +1,23 @@
+{
+  "session_id": "20260410_opencode_devpilot",
+  "oss_project": "opencode",
+  "customer": "航电软件",
+  "product_name": "DevPilot",
+  "oss_repo_path": "/Users/justbin/project/opensource/opencode",
+  "oss_tag": "v1.3.9",
+  "oss_commit_short": "9d3244efe",
+  "oss_commit_full": "9d3244efe",
+  "oss_branch": "hd-dev",
+  "oss_version_label": "v1.3.9",
+  "codex_model": "gpt-5.4",
+  "gemini_model": null,
+  "degraded": true,
+  "degraded_reason": "Gemini CLI 被封锁，用户明确排除，Claude 补偿架构视角",
+  "started_at": "2026-04-10T00:00:00+08:00",
+  "phases_completed": [1, 2, 3, 4, 5, 7],
+  "agent_status": {
+    "codex": "pending",
+    "gemini": "excluded"
+  },
+  "is_increment": false
+}

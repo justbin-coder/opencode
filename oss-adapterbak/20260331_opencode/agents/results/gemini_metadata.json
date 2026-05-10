@@ -1,0 +1,13 @@
+{
+  "agent": "gemini",
+  "status": "failed",
+  "pid": 48508,
+  "started_at": "2026-03-31T03:10:39Z",
+  "finished_at": "2026-03-31T03:15:12Z",
+  "success": false,
+  "exit_code": 1,
+  "session_id": null,
+  "error": "Exit code 1",
+  "log_file": "./oss-adapter/20260331_opencode/agents/results/gemini.log",
+  "output_file": "./oss-adapter/20260331_opencode/agents/results/gemini_result.md"
+}

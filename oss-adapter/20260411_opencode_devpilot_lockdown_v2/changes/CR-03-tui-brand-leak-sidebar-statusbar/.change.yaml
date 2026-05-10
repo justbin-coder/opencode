@@ -1,0 +1,53 @@
+cr_id: CR-03
+slug: tui-brand-leak-sidebar-statusbar
+status: completed
+type: brand_cleanup
+priority: P2
+related_reqs: [REQ-20]
+related_epic: E5
+base_spec: specs/E5-lockdown-v2-design.md
+discovered_at: "2026-04-11"
+implemented_at: "2026-04-11"
+implemented_by: manual_verification
+
+summary: >
+  REQ-20 品牌清洗遗漏两处 TUI 可见字符串：
+  1. 右下角状态栏 `• OpenCode local` — sidebar/footer.tsx 硬编码了 "Open"+"Code" 两段文字
+  2. 底部状态栏 `MiniMax M2.5 Free OpenCode Zen` — local.tsx 直接取 provider.name
+     未经 Brand.providerDisplayName 覆盖，导致 models-snapshot.js 中原始名称泄漏
+
+affected_files:
+  - path: "packages/opencode/src/cli/cmd/tui/feature-plugins/sidebar/footer.tsx"
+    action: modified
+    lines: "71-77"
+    change: "将 <b>Open</b><b>Code</b> 拼接改为 Brand.name"
+  - path: "packages/opencode/src/cli/cmd/tui/context/local.tsx"
+    action: modified
+    lines: "15 (import), 228"
+    change: "引入 Brand，将 provider?.name 改为 Brand.providerDisplayName(provider.id, provider.name)"
+
+before_after:
+  sidebar_footer:
+    before: "• OpenCode local"
+    after:  "• DevPilot local"
+  statusbar_model:
+    before: "MiniMax M2.5 Free OpenCode Zen"
+    after:  "MiniMax M2.5 Free DevPilot AI"
+
+root_cause: >
+  sidebar/footer.tsx 将 "OpenCode" 拆成 <b>Open</b><b>Code</b> 两段渲染，
+  绕过了 grep "OpenCode" 的全量扫描检测。
+  local.tsx 的 provider.parsed 直接读取 provider.name 原始值，
+  未使用已有的 Brand.providerDisplayName 统一覆盖入口。
+
+brand_coverage_after_fix:
+  Brand.name:           "DevPilot"           # 产品名
+  Brand.providerNames:
+    opencode:           "DevPilot AI"        # 状态栏 provider 显示
+    opencode-go:        "DevPilot Pro"
+  models_snapshot:
+    opencode.name:      "DevPilot AI Gateway" # 已在 REQ-20 修复，作为 fallback
+
+upgrade_note: >
+  升级时检查 sidebar/footer.tsx 中是否有新的 opencode 字面量（grep "Open\|Code" 不够，
+  需检查拼接渲染逻辑）；检查 local.tsx provider.parsed 是否仍走 Brand.providerDisplayName。

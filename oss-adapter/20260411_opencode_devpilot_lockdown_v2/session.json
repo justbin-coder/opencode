@@ -1,0 +1,44 @@
+{
+  "session_id": "20260411_opencode_devpilot_lockdown_v2",
+  "parent_session": "20260410_opencode_devpilot_lockdown_20260411",
+  "increment_label": "lockdown-v2",
+  "oss_project": "opencode",
+  "customer": "航电软件",
+  "product_name": "DevPilot",
+  "oss_repo_path": "/Users/justbin/project/opensource/opencode",
+  "oss_version_label": "v1.3.9+hd-dev",
+  "oss_commit_short": "fc5407132",
+  "oss_branch": "hd-dev",
+  "codex_model": "gpt-5.4",
+  "gemini_model": null,
+  "degraded": true,
+  "degraded_reason": "Gemini CLI blocked, Claude compensates architecture perspective",
+  "req_id_start": 14,
+  "started_at": "2026-04-11T14:00:00+08:00",
+  "phases_completed": [2, 3, 4, 5, 6, 7],
+  "is_increment": true,
+  "objective": "系统性审计 opencode 全部用户可见功能入口，屏蔽 R01-R09 交付范围外的一切，同时最小化上游同步成本",
+  "changes": [
+    {
+      "cr_id": "CR-01",
+      "slug": "project-commands-cleanup",
+      "status": "completed",
+      "date": "2026-04-11",
+      "summary": "删除 .opencode/command/ 下 7 个非交付开发命令（ai-deps/changelog/commit/issues/learn/rmslop/spellcheck）"
+    },
+    {
+      "cr_id": "CR-02",
+      "slug": "tui-command-panel-final-whitelist",
+      "status": "completed",
+      "date": "2026-04-11",
+      "summary": "app.tsx 中 /agents /mcps /models 加 hidden:true；command/index.ts 注释 Default.REVIEW"
+    },
+    {
+      "cr_id": "CR-03",
+      "slug": "tui-brand-leak-sidebar-statusbar",
+      "status": "completed",
+      "date": "2026-04-11",
+      "summary": "sidebar/footer.tsx 改用 Brand.name 消除 • OpenCode local；local.tsx 走 Brand.providerDisplayName 消除状态栏 OpenCode Zen"
+    }
+  ]
+}

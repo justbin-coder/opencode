@@ -1,0 +1,36 @@
+{
+  "session_id": "20260404_opencode_codesearch",
+  "oss_project": "opencode",
+  "customer": "航电软件",
+  "oss_repo_path": "/Users/justbin/project/opensource/opencode",
+  "oss_tag": "v1.3.9",
+  "oss_commit_short": "77f8b53b4",
+  "oss_commit_full": "77f8b53b4fe83b346235144938530558ab36ec1d",
+  "oss_branch": "hd-dev",
+  "oss_version_label": "v1.3.9",
+  "codex_model": "gpt-5.4",
+  "gemini_model": "gemini-3.1-pro-preview",
+  "started_at": "2026-04-04T00:00:00Z",
+  "phases_completed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "agent_status": {},
+  "degraded": false,
+  "degraded_reason": null,
+  "is_increment": false,
+  "changes": [
+    {
+      "cr_id": "CR-01",
+      "slug": "indexer-standalone",
+      "status": "ready",
+      "date": "2026-04-12",
+      "summary": "将 scripts/cpp-indexer/ 编译为独立 devpilot-indexer binary，消除客户侧对 opencode 源码的运行时依赖（REQ-10/REQ-12 交付阻塞修复）"
+    }
+  ]
+}

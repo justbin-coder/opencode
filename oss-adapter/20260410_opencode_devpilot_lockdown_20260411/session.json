@@ -1,0 +1,16 @@
+{
+  "session_id": "20260410_opencode_devpilot_lockdown_20260411",
+  "parent_session": "20260410_opencode_devpilot",
+  "increment_label": "feature-lockdown",
+  "oss_project": "opencode",
+  "customer": "航电软件",
+  "product_name": "DevPilot",
+  "oss_repo_path": "/Users/justbin/project/opensource/opencode",
+  "oss_version_label": "v1.3.9+hd-dev",
+  "req_id_start": 10,
+  "started_at": "2026-04-11T00:00:00+08:00",
+  "phases_completed": [2, 5, 7],
+  "commit": "fc5407132",
+  "objective": "只向客户暴露交付功能（R01-R09），隐藏所有 opencode 上游原生功能",
+  "is_increment": true
+}

@@ -1,0 +1,12 @@
+cr_id: CR-01
+slug: indexer-standalone
+status: ready
+date: "2026-04-12"
+related_reqs: [REQ-10, REQ-12]
+related_epic: E10
+base_spec: specs/E10-cpp-code-search-design.md
+defect_type: delivery_blocker
+summary: |
+  REQ-10 索引构建 CLI 依赖 opencode 源码目录（package.json scripts + 相对路径 import），
+  无法独立交付给客户。需将 scripts/cpp-indexer/ 编译为 devpilot-indexer 独立 binary，
+  cpp-code-search.ts 改用 subprocess 调用，消除运行时对 opencode 源码的依赖。

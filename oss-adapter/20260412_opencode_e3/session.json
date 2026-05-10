@@ -1,0 +1,20 @@
+{
+  "session_id": "20260412_opencode_e3",
+  "oss_project": "opencode",
+  "customer": "航电软件",
+  "oss_repo_path": "/Users/justbin/project/opensource/opencode",
+  "oss_tag": "devpilot-e1-complete",
+  "oss_commit_short": "465fe9a6a",
+  "oss_commit_full": "465fe9a6a",
+  "oss_branch": "hd-dev",
+  "oss_version_label": "devpilot-e1-complete",
+  "codex_model": "gpt-5.4",
+  "gemini_model": null,
+  "started_at": "2026-04-12T00:00:00Z",
+  "phases_completed": [1, 2, 3, 4, 5, 6, 7],
+  "agent_status": { "codex": "pending", "gemini": "skipped_by_user" },
+  "degraded": true,
+  "degraded_reason": "User opted out of Gemini; Claude will compensate architecture perspective",
+  "scope": "E3 only: R08 自动编译验证 + R09 编译错误自动修复 (≤3 轮, 仅改测试文件)",
+  "is_increment": false
+}

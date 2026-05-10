@@ -1,0 +1,98 @@
+YOLO mode is enabled. All tool calls will be automatically approved.
+Loaded cached credentials.
+YOLO mode is enabled. All tool calls will be automatically approved.
+I will begin by exploring the codebase to understand the project structure and locate key documentation files for Dimension 1.
+I'll start by reading the core documentation files and the skill system's entry point to understand the project's code understanding intent and extension architecture.
+I'll examine the plugin system and explore the tools and agents to understand how they interact with the codebase and if any search or indexing capabilities already exist.
+I've identified that `opencode` relies on LSP and traditional search methods, but I'll now examine `codesearch.ts` and the MCP implementation to understand their specific roles and how they might be leveraged for advanced search capabilities.
+I've analyzed the `opencode` architecture and identified its reliance on LSP and traditional search, noting the absence of built-in RAG or vector search for local code. I've also evaluated potential indexing and integration strategies for a large C++ project, concluding that a local vector DB and a custom MCP server or L2 plugin would be effective for offline semantic search and requirement-to-code mapping. I'll now check for any existing context compression logic in `opencode` similar to `repo-map`.
+## 维度 1：opencode 的代码感知设计意图
+
+**文档/源码分析**
+- 关键依据：`packages/opencode/src/agent/agent.ts:153-176` — `explore` Agent 的定义。它被描述为“专用于探索代码库的快速 Agent”，主要依赖 `grep`, `glob`, `list`, `bash`, `webfetch`, `websearch`, `codesearch`, `read` 等工具。
+- 关键依据：`packages/opencode/src/tool/codesearch.ts:5-10` — `codesearch` 工具目前主要对接外部 MCP 服务 (`https://mcp.exa.ai`)，用于搜索外部 API 和文档，而非本地代码的语义索引。
+- 关键依据：`packages/opencode/src/tool/lsp.ts:20-25` — 提供原生的 LSP 支持，涵盖 `goToDefinition`, `findReferences`, `documentSymbol` 等结构化感知能力。
+
+**架构判断**
+- **设计哲学**：opencode 采用“工具驱动型感知（Tool-based Sensing）”而非“索引驱动型感知（Index-based Sensing）”。它倾向于让 Agent 像人类程序员一样，通过 `grep` 搜索关键词、通过 LSP 导航符号、通过 `read` 阅读代码来建立上下文，而不是预先构建一个庞大的向量索引。
+- **路线图**：目前源码中未发现官方的本地 RAG 或 Vector Search 实现。`hd-docs/requirements_v0.2.md` 中提到的“需求-测试-代码追溯矩阵”和“影响分析”在 P1 阶段（二期迭代），说明官方层面尚未将深度代码索引作为当前 v1.3.x 版本的核心。
+
+**最终结论**
+- 状态：[⚠️]
+- 一句话总结：opencode 目前依靠 **LSP + 强力 Grep/Glob 工具链** 实现代码感知，缺乏针对大代码库的本地语义索引和需求关联原生支持。
+
+---
+
+### 维度 2：Skill / Plugin / MCP 扩展架构分析
+
+**文档/源码分析**
+- 关键依据：`packages/opencode/src/skill/index.ts:161-190` — Skill 通过 Markdown 加载，主要作用是“注入 Expert Guidance”和“资源配置”，适合存放项目特定的编码规范和 Prompt 策略。
+- 关键依据：`packages/plugin/src/index.ts:179-245` — Plugin Hook 系统非常强大，支持 `tool.execute.before/after`, `chat.message`, `experimental.chat.system.transform` 等钩子。
+- 关键依据：`packages/opencode/src/mcp/index.ts:125-140` — 完整的 MCP 客户端实现，能够将外部 MCP Server 的 Tool 动态转换为 opencode 的本地 Tool。
+
+**架构判断**
+1. **Skill 层**：适合存放 C++ 需求卡片模板、CppUnit/gtest 编写规范。它无法直接实现检索逻辑，但能定义检索结果如何被 Agent 使用。
+2. **Tool 层**：最适合集成“代码检索”。通过在 `.opencode/tools/` 注册自定义工具，可以封装对本地向量库或 `tree-sitter` 索引的查询。
+3. **Plugin 层**：适合做“透明增强”。例如，拦截 `chat.message` 钩子，自动提取需求 ID 并调用检索 Tool，将结果静默注入上下文，无需 Agent 显示调用 Tool。
+
+**最终结论**
+- 状态：[✅]
+- 一句话总结：推荐采用 **“MCP Server (索引服务) + Plugin (自动注入) + Skill (规范引导)”** 的三层组合方案。
+
+---
+
+### 维度 3：行业对比 — 同类工具如何解决大代码库问题
+
+| 方案名 | 核心技术 | 优点 | 缺点 | 适合场景 |
+|---------|----------|------|------|---------|
+| **Cursor** | Local Embedding + AST Index | 体验极其丝滑，秒级响应 | 闭源，索引逻辑黑盒 | 个人/小团队通用开发 |
+| **Aider** | **repo-map (ctags)** | 极低 token 消耗，支持超大 repo | 仅有结构信息，缺乏语义 | 快速理清大型项目脉络 |
+| **Cody** | Sourcegraph Search Engine | 企业级，支持海量代码关联 | 部署复杂，严重依赖后端服务 | 超大型企业代码仓 |
+| **opencode** | **Agentic Tool Use (LSP/Grep)** | 灵活度最高，无需预索引即可开始 | 大库检索响应慢，Token 压力大 | 复杂逻辑推理、定制化交付 |
+
+**对 opencode 定制的启示**
+- 针对 15w 行 C++ 项目，单纯靠 `grep` 会导致 Top-5 命中率不稳定且响应慢（维度 1 提到的 10s 目标很难通过暴力 grep 达成）。
+- **建议**：引入类似 Aider 的 `repo-map`（通过 ctags/tree-sitter 提取类/函数结构）结合轻量级本地向量库（如 LanceDB），作为 opencode 的 L2-Plugin。
+
+---
+
+### 维度 4：15w 行 C++ 项目的技术选型建议
+
+**架构建议矩阵**
+
+| 层次 | 首选方案 | 理由 | 备选方案 |
+|------|----------|------|----------|
+| **代码解析层** | **tree-sitter (C++)** | 离线、毫秒级解析类/函数/注释，比 ctags 更精准 | clangd (LSP) |
+| **索引与检索层** | **LanceDB + BGE-M3 (Local)** | 混合检索（语义+关键词），支持离线，索引体积小 | FAISS + BM25 |
+| **集成方式** | **Custom MCP Server** | 将检索能力封装为标准工具，解耦 opencode 核心 | L2 Plugin |
+
+**15w 行 C++ 定制细节：**
+1. **索引体积**：15w 行代码约 3000-5000 个 chunk，向量索引约 50MB-100MB，完全可单机部署。
+2. **性能评估**：本地模型（如 Qwen2.5-Coder-7B）配合向量检索，查询响应可在 3s 内完成。
+3. **需求关联**：通过 Skill 定义 E1 卡片的 JSON 提取规则，由 Plugin 自动将需求描述转换为向量查询。
+
+---
+
+## 能力矩阵汇总
+
+| 分析维度 | 状态 | 建议定制级别 | 置信度 | 关键备注 |
+|---------|------|-------------|--------|---------|
+| 代码感知设计意图 | ⚠️ | L1 (Tool 增强) | 高 | 官方目前重工具使用，轻全局索引 |
+| 扩展架构适配性 | ✅ | L2 (Plugin 层) | 高 | Hooks 丰富，适合做透明上下文注入 |
+| 行业方案对比 | ✅ | N/A | 中 | 需借鉴 Aider 的 repo-map 思想 |
+| 技术选型建议 | ✅ | L3 (服务层) | 高 | 离线部署必须使用本地 Embedding |
+
+## 推荐定制路径（架构视角）
+
+1. **最小可行方案（MVP）**：
+   - 实现一个自定义 Tool `cpp_grep_context`，利用 `grep` 扫描 C++ 符号名（类名/函数名）。
+   - 编写一个 E1 Skill，规范需求卡片格式，让 Agent 手动调用 `grep` 找代码。
+
+2. **生产级方案（满足指标）**：
+   - **Step 1**: 开发一个 **CppIndexer MCP Server**，使用 `tree-sitter` 扫描代码，LanceDB 存储向量。
+   - **Step 2**: 开发一个 **ContextPlugin**，挂载在 `chat.message` 钩子，当识别到需求 ID 时，自动调用 CppIndexer。
+   - **Step 3**: 部署本地推理后端（如 vLLM/Ollama）加载 Qwen2.5-Coder，确保 10s 内响应。
+
+## 人工审查清单
+- [ ] **❌ 编译链深度集成**：opencode 的 `bash` 工具能否直接识别 Windows 下的 CMake 输出（考虑到航电客户多为 Windows 环境）？需进一步验证。
+- [ ] **❓ 离线 Embedding 质量**：15w 行 C++ 的专业词汇（航电术语）在通用模型下的向量距离分布是否足够支撑 70% 命中率？建议先做测试集。
