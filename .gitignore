@@ -30,3 +30,10 @@ UPCOMING_CHANGELOG.md
 logs/
 *.bun-build
 tsconfig.tsbuildinfo
+
+# Local caches & personal tool configs
+.bun-tmp/
+.devpilot/
+.obsidian/
+.opencode/requirements/
+.scratch/
